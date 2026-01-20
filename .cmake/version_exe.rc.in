@@ -1,0 +1,61 @@
+
+// Reference https://learn.microsoft.com/zh-cn/windows/win32/menurc/versioninfo-resource?redirectedfrom=MSDN
+// Reference http://msdn.microsoft.com/en-us/library/aa381058%28v=VS.85%29.aspx
+
+#include "winver.h"
+
+#define VER_FILEVERSION               ${GIT_TAG_WITH_COMMA},${GIT_COMMIT_COUNT}
+#define VER_PRODUCTVERSION            ${GIT_TAG_WITH_COMMA},${GIT_COMMIT_COUNT}
+#define VER_COMPANYNAME_STR           "TimeChicken"
+#define VER_FILEDESCRIPTION_STR       "${PROJECT_DESCRIPTION}"
+#define VER_FILEVERSION_STR           "${GIT_SEMVER}.${GIT_COMMIT_COUNT}"
+#define VER_INTERNALNAME_STR          "${PROJECT_NAME}.exe"
+#define VER_LEGALCOPYRIGHT_STR        "Copyright (C) 2023 TimeChicken. All rights reserved."
+#define VER_ORIGINALFILENAME_STR      "${PROJECT_NAME}.exe"
+#define VER_PRODUCTNAME_STR           "${PROJECT_NAME}"
+#define VER_PRODUCTVERSION_STR        "${GIT_SEMVER}"
+
+#ifndef _DEBUG
+#define VER_DEBUG             0x0L
+#else
+#define VER_DEBUG             VS_FF_DEBUG
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION      VER_FILEVERSION
+  PRODUCTVERSION   VER_PRODUCTVERSION
+  FILEFLAGSMASK    VS_FFI_FILEFLAGSMASK // 0x3fL
+  FILEFLAGS        VER_DEBUG
+  FILEOS           VOS_NT_WINDOWS32
+  FILETYPE         VFT_APP
+  FILESUBTYPE      VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName",      VER_COMPANYNAME_STR
+            VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+            VALUE "FileVersion",      VER_FILEVERSION_STR
+            VALUE "InternalName",     VER_INTERNALNAME_STR
+            VALUE "LegalCopyright",   VER_LEGALCOPYRIGHT_STR
+            VALUE "OriginalFilename", VER_ORIGINALFILENAME_STR
+            VALUE "ProductName",      VER_PRODUCTNAME_STR
+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        /* The following line should only be modified for localized versions.     */
+        /* It consists of any number of WORD,WORD pairs, with each pair           */
+        /* describing a language,codepage combination supported by the file.      */
+        /*                                                                        */
+        /* For example, a file might have values "0x409,1252" indicating that it  */
+        /* supports English language (0x409) in the Windows ANSI codepage (1252). */
+
+        VALUE "Translation", 0x804, 1200
+
+    END
+END
+
+IDI_ICON1 ICON DISCARDABLE "${CMAKE_SOURCE_DIR}/res/image/favicon_nbg.ico"
