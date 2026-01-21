@@ -85,8 +85,8 @@ void MainWindow::initPushButton()
         RefreshService *mRefreshService = RefreshService::getInstance();
         mRefreshService->stopCountdown();
         QVariantMap map;
-        map["resultCode"] = MSEvent::RESULT_CODE_SUCCESS;
-        MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_LOGOUT_REQ);
+        map["resultCode"]               = MSEvent::RESULT_CODE_SUCCESS;
+        MSEvent *event                  = new MSEvent(this, MSEvent::EVENT_TYPE_LOGOUT_REQ);
         event->setData(map);
         QCoreApplication::postEvent(mMainService, event);
     });
@@ -171,9 +171,9 @@ void MainWindow::initPushButton()
     // Remove File Button
     connect(this->ui->pushButton_RemoveFile, &QPushButton::clicked, this, [=] {
         qDebug() << "Remove UploadFiles";
-        UploadFileDbHelper *helper = mUploadFileDbHelper;
-        QList<uf_info_t> files = mUploadFilesInfo;
-        QListWidget *lwufs = mListWidgetUploadFiles;
+        UploadFileDbHelper *helper     = mUploadFileDbHelper;
+        QList<uf_info_t> files         = mUploadFilesInfo;
+        QListWidget *lwufs             = mListWidgetUploadFiles;
         QList<QListWidgetItem *> items = lwufs->selectedItems();
         if (items.size() > 0) {
             QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Delete"), tr("Are you sure you want to delete the selected files?"));
@@ -315,7 +315,7 @@ void MainWindow::initListWidgetWebFiles()
 {
     qDebug() << __func__;
     connect(mListWidgetWebFiles, &QListWidget::itemDoubleClicked, this, [=] (QListWidgetItem *item) {
-        int index = mListWidgetWebFiles->row(item);
+        int index                       = mListWidgetWebFiles->row(item);
         RefreshService *mRefreshService = RefreshService::getInstance();
         QList<file_t> files             = mRefreshService->getFileList();
         qDebug() << "MainWindow::initListWidgetWebFiles onDoubleClicked" << index;
@@ -323,8 +323,8 @@ void MainWindow::initListWidgetWebFiles()
         if (!fd.isFile) {
             QVariantMap map;
             MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_ENTRY_FOLDER_REQ);
-            map["name"] = fd.name;
-            QVariant var = map;
+            map["name"]    = fd.name;
+            QVariant var   = map;
             event->setData(var);
             QCoreApplication::postEvent(MainService::getInstance(), event);
         }
@@ -377,7 +377,7 @@ void MainWindow::initTableWidgetProjects()
     });
     connect(mTableWidgetProjects, &QTableWidget::itemClicked, this, [=] (QTableWidgetItem *item) {
         project_info_t info = mProjectsInfo.at(item->row());
-        mActiveProjectInfo = info;
+        mActiveProjectInfo  = info;
         qDebug() << "onItemClicked Row:" << item->row() << "column:" << item->column() << "pid:" << info.pid << "name:" << info.name;
         // 更新当前选择Project的Name
         setSelectProjectName(info.name);

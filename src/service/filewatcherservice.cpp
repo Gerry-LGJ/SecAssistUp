@@ -24,7 +24,16 @@ void FileWatcherService::init()
 int FileWatcherService::restart()
 {
     qDebug() << __func__;
-    stop();
+    // clean up
+    mAntishakeTimer->stop();
+    mPendingPaths.clear();
+    if (mWatcher.files().size() > 0) {
+        mWatcher.removePaths(mWatcher.files());
+    }
+    if (mWatcher.directories().size() > 0) {
+        mWatcher.removePaths(mWatcher.directories());
+    }
+    // to start
     for (int i = 0; i < mFiles.size(); ++i) {
         watcher_t w = mFiles.at(i);
         w.exists    = w.fileInfo.exists();
@@ -39,6 +48,8 @@ int FileWatcherService::restart()
 int FileWatcherService::stop()
 {
     qDebug() << __func__;
+    mAntishakeTimer->stop();
+    mPendingPaths.clear();
     if (mWatcher.files().size() > 0) {
         mWatcher.removePaths(mWatcher.files());
     }
@@ -147,6 +158,8 @@ void FileWatcherService::cleanup()
         mWatcher.removePaths(mWatcher.directories());
     }
     mFiles.clear();
+    mAntishakeTimer->stop();
+    mPendingPaths.clear();
     mStarting = false;
 }
 
@@ -203,9 +216,9 @@ void FileWatcherService::onFileChanged(const QString &path)
  */
 void FileWatcherService::antishake()
 {
-    SettingsHelper *helper = SettingsHelper::getInstance();
+    SettingsHelper *settings = SettingsHelper::getInstance();
     mAntishakeTimer->stop();
-    mAntishakeTimer->start(helper->getAppDeboundDelay());
+    mAntishakeTimer->start(settings->getAppDeboundDelay());
 }
 
 void FileWatcherService::antishakeTrigger()

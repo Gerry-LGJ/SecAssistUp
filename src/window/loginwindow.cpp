@@ -41,10 +41,12 @@ void LoginWindow::init()
     {
         QSignalBlocker blocker(this->ui->checkBox_RememberMe);
         this->ui->checkBox_RememberMe->setCheckState(mSettings->getSavePassword() ? Qt::Checked : Qt::Unchecked);
+        mRememberMe = mSettings->getSavePassword();
     }
     {
         QSignalBlocker blocker(this->ui->checkBox_AutoLogin);
         this->ui->checkBox_AutoLogin->setCheckState(mSettings->getAutoLogin() ? Qt::Checked : Qt::Unchecked);
+        mAutoLogin = mSettings->getAutoLogin();
     }
 
     // Start Auto Login Timer
