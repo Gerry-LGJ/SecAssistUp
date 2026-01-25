@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     mUploadFileDbHelper    = UploadFileDbHelper::getInstance();
     mFilTools              = FilTools::getInstance();
     mSettingsHelper        = SettingsHelper::getInstance();
+    mWinTaskbarButton      = new QWinTaskbarButton(this);
 }
 
 MainWindow::~MainWindow()
@@ -445,6 +446,7 @@ void MainWindow::initProgressBar()
     QProgressBar *upload   = this->ui->progressBar_Upload;
     QLabel *downloadFile   = this->ui->label_DownloadFile;
     QLabel *uploadFile     = this->ui->label_UploadFile;
+    mWinTaskbarProgress    = nullptr;
     download->setVisible(false);
     upload->setVisible(false);
     downloadFile->setText("");
@@ -732,12 +734,21 @@ void MainWindow::setProgressBarUpload(int value, QString text)
             mProgressBar->setVisible(false);
         }
         label->setText(text);
+        if (mWinTaskbarProgress && mWinTaskbarProgress->isVisible()) {
+            mWinTaskbarProgress->setVisible(false);
+        }
     } else {
         if (!mProgressBar->isVisible()) {
             mProgressBar->setVisible(true);
         }
         mProgressBar->setValue(value);
         label->setText(text);
+        if (mWinTaskbarProgress) {
+            if (!mWinTaskbarProgress->isVisible()) {
+                mWinTaskbarProgress->setVisible(true);
+            }
+            mWinTaskbarProgress->setValue(value);
+        }
     }
 }
 
@@ -893,6 +904,17 @@ bool MainWindow::event(QEvent *e)
     if (e->type() == MSEvent::MSEVENT_BASE_TYPE) {
         MSEvent *event = static_cast<MSEvent *>(e);
         mSEventHandler(event);
+    } else if (e->type() == QEvent::Show) {
+        static bool initialized = false;
+        if (initialized == false) {
+            initialized             = true;
+            QWindow *win            = windowHandle();
+            qDebug() << "MainWindow::event QEvent::Show windowHandle:" << win;
+            if (win) {
+                mWinTaskbarButton->setWindow(win);
+                mWinTaskbarProgress = mWinTaskbarButton->progress();
+            }
+        }
     }
     return QMainWindow::event(e);
 }
@@ -902,14 +924,38 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
     MainService *mMainService        = MainService::getInstance();
     QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
-    if (mSystemTrayIcon->isVisible()) {
-        qDebug() << "MainWindow::closeEvent" << "hide window";
-        hide();
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Quit"));
+    msgBox.setText(tr("Are you sure you want to exit the program ?"));
+    msgBox.setIcon(QMessageBox::Question);
+    // add button
+    QPushButton *cancelBtn   = msgBox.addButton(tr("Cancel"),   QMessageBox::ActionRole);
+    QPushButton *minimizeBtn = msgBox.addButton(tr("Minimize"), QMessageBox::ActionRole);
+    QPushButton *quitBtn     = msgBox.addButton(tr("Quit"),     QMessageBox::ActionRole);
+    msgBox.setDefaultButton(quitBtn);
+
+    // run exec()
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == minimizeBtn) {
+        if (mSystemTrayIcon->isVisible()) {
+            qDebug() << "MainWindow::closeEvent" << "hide window";
+            hide();
+            event->ignore();
+            // Display the prompt message
+            mSystemTrayIcon->showMessage("Friendly Reminder",
+                                         "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
+                                         QIcon(":/image/favicon_nbg.png"),
+                                         3000);
+        }
+    } else if (msgBox.clickedButton() == quitBtn) {
+        mSystemTrayIcon->hide();
+        QApplication::quit();
+        event->accept();
+    } else if (msgBox.clickedButton() == cancelBtn) {
         event->ignore();
-        // Display the prompt message
-        mSystemTrayIcon->showMessage("Friendly Reminder",
-                                     "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
-                                     QIcon(":/image/favicon_nbg.png"),
-                                     3000);
+    } else {
+        event->ignore();
     }
 }

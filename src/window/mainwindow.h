@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QListWidget>
 #include <QTableWidget>
+#include <QWinTaskbarButton>
+#include <QWinTaskbarProgress>
 
 #include "../service/msevent.h"
 #include "../common/singleton.h"
@@ -61,6 +63,8 @@ private:
     QList<uf_info_t>             mUploadFilesInfo;
     FilTools                    *mFilTools;
     SettingsHelper              *mSettingsHelper;
+    QWinTaskbarButton           *mWinTaskbarButton;
+    QWinTaskbarProgress         *mWinTaskbarProgress;
 
     // func
     MainWindow(QWidget *parent = nullptr);

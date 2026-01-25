@@ -115,6 +115,7 @@ void MainService::initSystemTrayIcon()
         requestShowActiveWindow(ACTIVE_WINDOW_TYPE_SETTINGS);
     });
     connect(quitAction, &QAction::triggered, this, [=] {
+        mSystemTrayIcon->hide();
         QCoreApplication::exit();
     });
 }

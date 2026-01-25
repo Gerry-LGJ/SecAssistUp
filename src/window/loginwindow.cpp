@@ -136,15 +136,39 @@ void LoginWindow::closeEvent(QCloseEvent *event)
     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
     MainService *mMainService        = MainService::getInstance();
     QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
-    if (mSystemTrayIcon->isVisible()) {
-        qDebug() << "LoginWindow::closeEvent" << "hide window";
-        hide();
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Quit"));
+    msgBox.setText(tr("Are you sure you want to exit the program ?"));
+    msgBox.setIcon(QMessageBox::Question);
+    // add button
+    QPushButton *cancelBtn   = msgBox.addButton(tr("Cancel"),   QMessageBox::ActionRole);
+    QPushButton *minimizeBtn = msgBox.addButton(tr("Minimize"), QMessageBox::ActionRole);
+    QPushButton *quitBtn     = msgBox.addButton(tr("Quit"),     QMessageBox::ActionRole);
+    msgBox.setDefaultButton(quitBtn);
+
+    // run exec()
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == minimizeBtn) {
+        if (mSystemTrayIcon->isVisible()) {
+            qDebug() << "LoginWindow::closeEvent" << "hide window";
+            hide();
+            event->ignore();
+            // Display the prompt message
+            mSystemTrayIcon->showMessage("Friendly Reminder",
+                                         "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
+                                         QIcon(":/image/favicon_nbg.png"),
+                                         3000);
+        }
+    } else if (msgBox.clickedButton() == quitBtn) {
+        mSystemTrayIcon->hide();
+        QApplication::quit();
+        event->accept();
+    } else if (msgBox.clickedButton() == cancelBtn) {
         event->ignore();
-        // Display the prompt message
-        mSystemTrayIcon->showMessage("Friendly Reminder",
-                                     "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
-                                     QIcon(":/image/favicon_nbg.png"),
-                                     3000);
+    } else {
+        event->ignore();
     }
 }
 
