@@ -230,6 +230,7 @@ void FileWatcherService::antishakeTrigger()
     }
     map["files"] = mPendingPaths;
     sendMsgToObject(win, MSEvent::EVENT_TYPE_FILE_CHANGED_IND, map);
+    mPendingPaths.clear();
 }
 
 void FileWatcherService::addPendingQueue(const QString &path)
