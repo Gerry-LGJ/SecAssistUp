@@ -34,6 +34,10 @@
 #define APP_NATIVE_TEXT         "APP/native_text"
 #define APP_ANIMATION_ENABLED   "APP/animation_enabled"
 #define APP_DEBOUND_DELAY       "APP/debound_delay"
+#define APP_NOTIFY_BUBBLE       "APP/notify_bubble"
+#define APP_SYSTEM_NOTIFY       "APP/system_nofify"
+#define APP_CLOSE_MAIN_WINDOW   "APP/close_main_window"
+#define APP_START_MINI_TO_TRAY  "APP/start_minimized_to_tray"
 #define WINDOW_BLUR             "WINDOW/blur"
 #define WINDOW_OPACITY          "WINDOW/opacity"
 #define WINDOW_BLUR_RADIUS      "WINDOW/blur_radius"
@@ -52,6 +56,7 @@ public:
     void init(char *argv[]);
     void autoSetDefaultConfig(QString filePath);
     Q_INVOKABLE QString getIniFilePath();
+    void sync(void);
 
 
     // USER_WEB_URL
@@ -261,6 +266,49 @@ public:
     }
     Q_INVOKABLE unsigned int getAppDeboundDelay(unsigned int def = 500) {
         return value(APP_DEBOUND_DELAY, def).toInt();
+    }
+
+
+    // APP_NOTIFY_BUBBLE
+    Q_INVOKABLE void saveAppNotifyBubble(bool enable) {
+        setValue(APP_NOTIFY_BUBBLE, enable);
+    }
+    Q_INVOKABLE bool getAppNotifyBubble(bool def = false) {
+        return value(APP_NOTIFY_BUBBLE, def).toBool();
+    }
+
+
+    // APP_SYSTEM_NOTIFY
+    Q_INVOKABLE void saveAppSystemNotify(bool enable) {
+        setValue(APP_SYSTEM_NOTIFY, enable);
+    }
+    Q_INVOKABLE bool getAppSystemNotify(bool def = true) {
+        return value(APP_SYSTEM_NOTIFY, def).toBool();
+    }
+
+
+    // APP_CLOSE_MAIN_WINDOW
+    Q_INVOKABLE void saveAppCloseMainWindow(const QString &mode) {
+        if (!(mode == "ask" || mode == "tray" || mode == "exit")) {
+            qWarning() << __func__ << "An unknown value is being attempted to be saved.";
+            return ;
+        }
+        setValue(APP_CLOSE_MAIN_WINDOW, mode);
+    }
+    Q_INVOKABLE QString getAppCloseMainWindow(const QString &def=QString("ask")) {
+        // "ask"   : Always ask on close.
+        // "tray"  : Minimize to system tray, program continues running.
+        // "exit"  : Exit the program.
+        return value(APP_CLOSE_MAIN_WINDOW, def).toString();
+    }
+
+
+    // APP_START_MINI_TO_TRAY
+    Q_INVOKABLE void saveAppStartMinimizedToTray(bool enable) {
+        setValue(APP_START_MINI_TO_TRAY, enable);
+    }
+    Q_INVOKABLE bool getAppStartMinimizedToTray(bool def = false) {
+        return value(APP_START_MINI_TO_TRAY, def).toBool();
     }
 
 

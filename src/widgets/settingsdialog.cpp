@@ -7,6 +7,10 @@
 #include <QNetworkProxy>
 #include <QMessageBox>
 
+#include "../service/mainservice.h"
+#include "../window/mainwindow.h"
+#include "../widgets/notificationform.h"
+#include "../widgets/notificationbubble.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -18,6 +22,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     mAppInfo           = AppInfo::getInstance();
     mNetwork           = Network::getInstance();
     mAgentTestCallable = new NetworkCallable(this);
+    mCMWButtonGroup    = new QButtonGroup(this);
+    init();
 }
 
 SettingsDialog::~SettingsDialog()
@@ -25,14 +31,40 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
+void SettingsDialog::initRunAtSystemStartup()
+{
+#ifdef Q_OS_WIN
+    {
+        QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                           QSettings::NativeFormat);
+        QString appName = QCoreApplication::applicationName();
+        QString appPath = QCoreApplication::applicationFilePath();
+        appPath = QDir::toNativeSeparators(appPath);
+        if (settings.value(appName).toString() != appPath) {
+            if (!settings.value(appName).toString().isEmpty()) {
+                qDebug() << __func__ << "There is an invalid registry path.";
+                settings.remove(appName); // delete invalid path
+            }
+        }
+    }
+#endif
+}
+
 void SettingsDialog::init()
 {
     // Set as a modal window
-    setModal(true);
+    // setModal(true);
+    setWindowModality(Qt::WindowModal);
     // set onClick handle function
-    connect(this->ui->checkBox_DbgEnable,       &QCheckBox::stateChanged, this, &SettingsDialog::onDbgEnableStateChanged);
+    connect(this->ui->checkBox_DbgEnable,            &QCheckBox::stateChanged, this, &SettingsDialog::onDbgEnableStateChanged);
+    connect(this->ui->checkBox_NotifyBubble,         &QCheckBox::stateChanged, this, &SettingsDialog::onNotifyBubbleStateChanged);
+    connect(this->ui->checkBox_SystemTrayNotify,     &QCheckBox::stateChanged, this, &SettingsDialog::onSystemTrayNotifyStateChanged);
+    connect(this->ui->checkBox_RunAtSystemStartup,   &QCheckBox::stateChanged, this, &SettingsDialog::onRunAtSystemStartupStateChanged);
+    connect(this->ui->checkBox_StartMinimizedToTray, &QCheckBox::stateChanged, this, &SettingsDialog::onStartMinimizedToTrayStateChanged);
     connect(this->ui->pushButton_TestCrash,     &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonTestCrash);
     connect(this->ui->pushButton_Restart,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonRestart);
+    connect(this->ui->pushButton_SystemTray,    &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonSystemTray);
+    connect(this->ui->pushButton_Notification,  &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonNotification);
     connect(this->ui->pushButton_OpenLogFolder, &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenLoggerFolder);
     connect(this->ui->pushButton_OpenCfg,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenConfiguration);
     connect(this->ui->spinBox_RefreshInterval,  QOverload<int>::of(&QSpinBox::valueChanged), this, &SettingsDialog::onValueChangedSpinBoxRefreshInterval);
@@ -41,8 +73,15 @@ void SettingsDialog::init()
     connect(this->ui->comboBox_AgentMode,       QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsDialog::onCurrentIndexChangedComboBoxAgentMode);
     connect(this->ui->pushButton_AgentTest,     &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentTest);
     connect(this->ui->pushButton_AgentConfirm,  &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentConfirm);
+    // init Close Main Window Radio Button
+    mCMWButtonGroup->addButton(this->ui->radioButton_cmw_ask);
+    mCMWButtonGroup->addButton(this->ui->radioButton_cmw_tray);
+    mCMWButtonGroup->addButton(this->ui->radioButton_cmw_exit);
+    connect(mCMWButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonCloseMainWindow);
+
     // reload settings to UI
     reloadConfigurationsFromSettings();
+
     // init agent test
     connect(this->mAgentTestCallable, &NetworkCallable::start, this, [=] {
         this->mAgentTesting = true;
@@ -59,8 +98,11 @@ void SettingsDialog::init()
     });
 
     // other
-    this->ui->lineEdit_Port->setValidator(new QIntValidator(0, 65535, this->ui->lineEdit_Port));
     mAgentTesting = false;
+
+    // Common Page
+    this->ui->lineEdit_Port->setValidator(new QIntValidator(0, 65535, this->ui->lineEdit_Port));
+
     // About Page
     this->ui->label_Version->setText(mAppInfo->version());
     this->ui->label_QtVersion->setText(mAppInfo->buildQtVersion());
@@ -69,6 +111,7 @@ void SettingsDialog::init()
 
 // void SettingsDialog::closeEvent(QCloseEvent *event)
 // {
+// #if 0
 //     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
 //     MainService *mMainService        = MainService::getInstance();
 //     QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
@@ -82,6 +125,7 @@ void SettingsDialog::init()
 //                                      QIcon(":/image/favicon_nbg.png"),
 //                                      3000);
 //     }
+// #endif
 // }
 
 void SettingsDialog::onDbgEnableStateChanged(int state)
@@ -105,7 +149,38 @@ void SettingsDialog::onClickPushButtonTestCrash()
 void SettingsDialog::onClickPushButtonRestart()
 {
     qDebug() << __func__;
-    QApplication::exit(931);
+    MainService *service = MainService::getInstance();
+    service->exit(931);
+}
+
+void SettingsDialog::onClickPushButtonSystemTray()
+{
+    static int count                 = 0;
+    MainService *mMainService        = MainService::getInstance();
+    QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
+    if (mSystemTrayIcon->isVisible()) {
+        qDebug() << __func__ << QString("onClick PushButton Test System Tray Count:%1.").arg(count);
+        mSystemTrayIcon->showMessage(tr("Friendly Reminder"),
+                                     QString(tr("SecAssistUp Test System Tray Count:%1.")).arg(count++),
+                                     QIcon(":/image/favicon_nbg.png"),
+                                     1000);
+    }
+}
+
+void SettingsDialog::onClickPushButtonNotification()
+{
+    qDebug() << __func__;
+#if 0
+    NotificationBubble *form = new NotificationBubble("您的消息内容\n您的消息内容您的\n消息内容您的消息内容您\n的消息内容您的\n消息内容\n", 5000);
+    form->showAtScreenCorner();
+#else
+    static int count = 0;
+    QStringList files;
+    files << "test 1" << "test 2" << "test 3";
+    NotificationForm *form = new NotificationForm(QString(tr("Test Notification Bubble %1")).arg(++count), files);
+    form->showAtScreenCorner();
+#endif
+    qDebug() << __func__ << "Return.";
 }
 
 void SettingsDialog::onClickPushButtonOpenLoggerFolder()
@@ -132,6 +207,74 @@ void SettingsDialog::onValueChangedSpinBox_DebounceDelay(int i)
 {
     qDebug() << __func__ << " i:" << i;
     mSettingsHelper->saveAppDeboundDelay(i);
+}
+
+void SettingsDialog::onNotifyBubbleStateChanged(int state)
+{
+    qDebug() << __func__ << "state: " << state;
+    if (state == Qt::Unchecked) {
+        mSettingsHelper->saveAppNotifyBubble(false);
+    } else if (state == Qt::PartiallyChecked) {
+    } else if (state == Qt::Checked) {
+        mSettingsHelper->saveAppNotifyBubble(true);
+    }
+}
+
+void SettingsDialog::onSystemTrayNotifyStateChanged(int state)
+{
+    qDebug() << __func__ << "i:" << state;
+    if (state == Qt::Unchecked) {
+        mSettingsHelper->saveAppSystemNotify(false);
+    } else if (state == Qt::PartiallyChecked) {
+    } else if (state == Qt::Checked) {
+        mSettingsHelper->saveAppSystemNotify(true);
+    }
+}
+
+void SettingsDialog::onClickRadioButtonCloseMainWindow(QAbstractButton *button)
+{
+    if (button == this->ui->radioButton_cmw_ask) {
+        mSettingsHelper->saveAppCloseMainWindow("ask");
+    } else if (button == this->ui->radioButton_cmw_tray) {
+        mSettingsHelper->saveAppCloseMainWindow("tray");
+    } else if (button == this->ui->radioButton_cmw_exit) {
+        mSettingsHelper->saveAppCloseMainWindow("exit");
+    } else {
+        mSettingsHelper->saveAppCloseMainWindow("ask");
+    }
+}
+
+void SettingsDialog::onRunAtSystemStartupStateChanged(int state)
+{
+    qDebug() << __func__ << "state:" << state;
+#ifdef Q_OS_WIN
+    // 使用 NativeFormat 来操作 Windows 注册表
+    QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                       QSettings::NativeFormat);
+
+    QString appName = QCoreApplication::applicationName();
+    QString appPath = QCoreApplication::applicationFilePath();
+
+    // 将路径转换为 Windows 原生格式（反斜杠）
+    appPath = QDir::toNativeSeparators(appPath);
+
+    if (state == Qt::Checked) {
+        settings.setValue(appName, appPath);
+    } else {
+        settings.remove(appName);
+    }
+#endif
+}
+
+void SettingsDialog::onStartMinimizedToTrayStateChanged(int state)
+{
+    qDebug() << __func__ << "i:" << state;
+    if (state == Qt::Unchecked) {
+        mSettingsHelper->saveAppStartMinimizedToTray(false);
+    } else if (state == Qt::PartiallyChecked) {
+    } else if (state == Qt::Checked) {
+        mSettingsHelper->saveAppStartMinimizedToTray(true);
+    }
 }
 
 void SettingsDialog::onClickPushButtonSelectDownloadLocation()
@@ -225,9 +368,8 @@ void SettingsDialog::onClickPushButtonAgentConfirm()
 void SettingsDialog::reloadConfigurationsFromSettings()
 {
     qDebug() << __func__;
-    // Agent
-    // Common Page
-    this->ui->spinBox_RefreshInterval->setValue(mSettingsHelper->getHeartbeatInterval());
+    // // Common Page
+    // LineEdit
     this->ui->lineEdit_DownloadLocation->setText(mSettingsHelper->getAppDownloadDir());
     // Agent
     uint8_t agentModeIndex  = 0;
@@ -258,6 +400,48 @@ void SettingsDialog::reloadConfigurationsFromSettings()
         const QSignalBlocker blocker(this->ui->spinBox_DebounceDelay);
         this->ui->spinBox_DebounceDelay->setValue(mSettingsHelper->getAppDeboundDelay());
     }
+    // CheckBox
+    {
+        const QSignalBlocker blocker(this->ui->checkBox_NotifyBubble);
+        this->ui->checkBox_NotifyBubble->setChecked(mSettingsHelper->getAppNotifyBubble());
+    }
+    {
+        const QSignalBlocker blocker(this->ui->checkBox_SystemTrayNotify);
+        this->ui->checkBox_SystemTrayNotify->setChecked(mSettingsHelper->getAppSystemNotify());
+    }
+    {
+        const QSignalBlocker blocker(this->ui->checkBox_StartMinimizedToTray);
+        this->ui->checkBox_StartMinimizedToTray->setChecked(mSettingsHelper->getAppStartMinimizedToTray());
+    }
+#ifdef Q_OS_WIN
+    {
+        QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                           QSettings::NativeFormat);
+        QString appName = QCoreApplication::applicationName();
+        QString appPath = QCoreApplication::applicationFilePath();
+        appPath = QDir::toNativeSeparators(appPath);
+        if (settings.value(appName).toString() == appPath) {
+            const QSignalBlocker blocker(this->ui->checkBox_RunAtSystemStartup);
+            this->ui->checkBox_RunAtSystemStartup->setChecked(true);
+        }
+    }
+#endif
+
+    // Radio Button
+    {
+        QString mode = mSettingsHelper->getAppCloseMainWindow();
+        const QSignalBlocker blocker(this->mCMWButtonGroup);
+        if (mode == "ask") {
+            this->ui->radioButton_cmw_ask->setChecked(true);
+        } else if (mode == "tray") {
+            this->ui->radioButton_cmw_tray->setChecked(true);
+        } else if (mode == "exit") {
+            this->ui->radioButton_cmw_exit->setChecked(true);
+        } else { // default "ask"
+            this->ui->radioButton_cmw_ask->setChecked(true);
+        }
+    }
+
 
     // Debug Page
     {

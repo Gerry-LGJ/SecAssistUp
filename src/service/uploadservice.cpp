@@ -110,10 +110,12 @@ void UploadService::initUploadReqCallable()
                 QString data = doc.object().value("data").toString();
                 if (code) {
                     if (mFiles.size() == 0) {
+                        mOkFiles.append(mActiveFile);
                         resultCode = MSEvent::RESULT_CODE_SUCCESS;
                         qint64 takeTime = mTakeTimer.elapsed();
                         qDebug() << "Upload Succeed" << takeTime / 1000 << "ms.";
                     } else {
+                        mOkFiles.append(mActiveFile);
                         uploadNext();
                         return ;
                     }
@@ -146,6 +148,9 @@ void UploadService::initUploadReqCallable()
         QVariantMap map;
         map["resultCode"]  = resultCode;
         map["errorString"] = errorString;
+        if (resultCode == MSEvent::RESULT_CODE_SUCCESS && mOkFiles.size() > 0) {
+            map["okFiles"]     = mOkFiles;
+        }
         sendMsgToObject(mUploadReqSender, MSEvent::EVENT_TYPE_UPLOAD_CFM, map);
         mMainWindow->setProgressBarUpload(0, "");
         mUploading = false;
@@ -154,7 +159,7 @@ void UploadService::initUploadReqCallable()
     connect(mUploadReqCallable, &NetworkCallable::uploadProgress, this, [=] (qint64 recv, qint64 total) {
         int progress = (total > 0) ? (recv * 100) / total : 0;
         qDebug() << "NetworkCallable::uploadProgress:" << progress;
-        win->setProgressBarUpload(progress, mActiveFile);
+        win->setProgressBarUpload(progress, QFileInfo(mActiveFile).fileName());
     });
 }
 
@@ -203,9 +208,12 @@ void UploadService::initUploadChunkReqCb()
                         uploadChunkNext();
                         return ;
                     } else if (mChunk == mChunks && mFiles.size() != 0) {
+                        mOkFiles.append(mActiveFileInfo.filePath());
+                        qDebug() << "Upload Succeed. md5:" << mFilTools->md5CalculateFile(mActiveFileInfo.filePath());
                         uploadChunkNextFile();
                         return ;
                     } else if (mFiles.size() == 0) {
+                        mOkFiles.append(mActiveFileInfo.filePath());
                         resultCode = MSEvent::RESULT_CODE_SUCCESS;
                         qint64 takeTime = mTakeTimer.elapsed();
                         qDebug() << "Upload Succeed" << takeTime / 1000 << "ms. md5:" << mFilTools->md5CalculateFile(mActiveFileInfo.filePath());
@@ -230,6 +238,9 @@ void UploadService::initUploadChunkReqCb()
         QVariantMap map;
         map["resultCode"]  = resultCode;
         map["errorString"] = errorString;
+        if (resultCode == MSEvent::RESULT_CODE_SUCCESS && mOkFiles.size() > 0) {
+            map["okFiles"]     = mOkFiles;
+        }
         sendMsgToObject(mUploadReqSender, MSEvent::EVENT_TYPE_UPLOAD_CFM, map);
         mMainWindow->setProgressBarUpload(0, "");
         mUploading = false;
@@ -245,6 +256,7 @@ void UploadService::initUploadChunkReqCb()
 void UploadService::upload()
 {
     mTakeTimer.start();
+    mOkFiles.clear();
     uploadNext();
 }
 
@@ -272,7 +284,7 @@ void UploadService::uploadNext()
         return ;
     }
 
-    mActiveFile = QFileInfo(name).fileName();
+    mActiveFile = name;
     mNetwork->postForm(url)
     ->addHeader("User-Agent", mUserAgent)
     ->setRetry(1)
@@ -288,6 +300,7 @@ void UploadService::uploadNext()
 void UploadService::uploadChunks()
 {
     mTakeTimer.start();
+    mOkFiles.clear();
     uploadChunkNextFile();
 }
 
@@ -402,7 +415,7 @@ void UploadService::uploadChunkNext()
     params = params->addHttpPart(part_http);
 
     params->addHeader("User-Agent", mUserAgent)
-    ->setTimeout(60 * 1000)
+    ->setTimeout(30 * 1000)
     ->setRetry(1)
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     ->addAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy)

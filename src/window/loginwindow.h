@@ -42,7 +42,6 @@ protected:
 private:
     Ui::LoginWindow *ui;
     SettingsHelper  *mSettings;
-    SettingsDialog  *mSettingsDialog;
     QObject         *mMainService;
     bool             mRememberMe;
     bool             mAutoLogin;

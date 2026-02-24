@@ -33,8 +33,30 @@ public:
     void init();
     LoginWindow     *getLoginWindowInst()    { return mLoginWindow;    }
     MainWindow      *getMainWindowInst()     { return mMainWindow;     }
-    SettingsDialog  *getSettingsDialogInst() { return mSettingsDialog; }
+    // System Tray Icon
     QSystemTrayIcon *getSystemTrayIcon()     { return mSystemTrayIcon; }
+    void             showSystemTrayMessage(
+        const QString &title,
+        const QString &message,
+        QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information,
+        int millisecondsTimeoutHint = 10000) {
+        if (mSystemTrayIcon)
+            mSystemTrayIcon->showMessage(title, message, icon, millisecondsTimeoutHint);
+    }
+    void             showSystemTrayMessage(
+        const QString &title,
+        const QString &message,
+        const QIcon &icon,
+        int millisecondsTimeoutHint = 10000) {
+        if (mSystemTrayIcon)
+            mSystemTrayIcon->showMessage(title, message, icon, millisecondsTimeoutHint);
+    }
+    // Close Event
+    void closeEvent(QWidget *widget, QCloseEvent *event);
+    // Exit
+    void exit(int code = 0);
+    // Run once
+    static int runOnceOnly(void);
 
 private:
     // Login Service
@@ -60,8 +82,6 @@ private:
     LoginWindow         *mLoginWindow;
     MainWindow          *mMainWindow;
     void requestShowActiveWindow(int type);
-    // Settings UI Service
-    SettingsDialog      *mSettingsDialog;
     // Project Info UI Service
     ProjectInfoDialog   *mProjectInfoDialog;
     // System Tray Icon

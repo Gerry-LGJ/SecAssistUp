@@ -37,7 +37,7 @@ private:
     SettingsHelper  *mSettingsHelper;
     FilTools        *mFilTools;
     QString          mUserAgent;
-    QStringList      mFiles;
+    QStringList      mFiles, mOkFiles;
     QString          mDir;
     QString          mWebDir;
     QString          mActiveFile;

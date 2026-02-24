@@ -59,6 +59,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>Refresh</string>
+         </property>
          <property name="text">
           <string>Refresh</string>
          </property>
@@ -71,6 +74,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Return Parent Directory</string>
          </property>
          <property name="text">
           <string>Return</string>
@@ -147,6 +153,15 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Settings</string>
+         </property>
          <property name="text">
           <string>Settings</string>
          </property>
@@ -159,6 +174,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Logout</string>
          </property>
          <property name="text">
           <string>Logout</string>
@@ -310,6 +328,9 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string>Add a new project and working directory.</string>
+                </property>
                 <property name="text">
                  <string>Add</string>
                 </property>
@@ -322,6 +343,9 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Remove a project.</string>
                 </property>
                 <property name="text">
                  <string>Remove</string>
@@ -376,6 +400,9 @@
                  </property>
                  <item>
                   <widget class="QRadioButton" name="radioButton_Override">
+                   <property name="toolTip">
+                    <string>If the downloaded file exists, it will be replaced.</string>
+                   </property>
                    <property name="text">
                     <string>Override</string>
                    </property>
@@ -478,6 +505,9 @@
               </property>
               <item>
                <widget class="QPushButton" name="pushButton_AddFile">
+                <property name="toolTip">
+                 <string>Add a file that needs monitoring.</string>
+                </property>
                 <property name="text">
                  <string>Add</string>
                 </property>
@@ -485,6 +515,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_RemoveFile">
+                <property name="toolTip">
+                 <string>Remove the currently monitored file(s).</string>
+                </property>
                 <property name="text">
                  <string>Remove</string>
                 </property>
@@ -495,6 +528,9 @@
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_EnableFsw">
+                <property name="toolTip">
+                 <string>Monitor the selected files. They will be automatically uploaded when created or modified.</string>
+                </property>
                 <property name="text">
                  <string>File Watcher</string>
                 </property>

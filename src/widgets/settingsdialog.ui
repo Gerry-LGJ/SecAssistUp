@@ -23,7 +23,7 @@
       <attribute name="title">
        <string>Common</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_4">
+      <layout class="QGridLayout" name="gridLayout_5">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -36,280 +36,497 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <property name="spacing">
+       <property name="horizontalSpacing">
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QWidget" name="widget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>Refresh Interval (Unit: seconds)</string>
-            </property>
-            <widget class="QSpinBox" name="spinBox_RefreshInterval">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>71</width>
-               <height>22</height>
-              </rect>
+        <widget class="QScrollArea" name="scrollArea_Common">
+         <property name="styleSheet">
+          <string notr="true">QScrollArea#scrollArea_Common {
+	border: none;
+}</string>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>759</width>
+            <height>595</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>12</number>
+           </property>
+           <property name="leftMargin">
+            <number>9</number>
+           </property>
+           <property name="topMargin">
+            <number>9</number>
+           </property>
+           <property name="rightMargin">
+            <number>9</number>
+           </property>
+           <property name="bottomMargin">
+            <number>9</number>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="groupBox_14">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="maximum">
-              <number>3600</number>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_8">
-            <property name="title">
-             <string>File Watcher Debounce Delay</string>
-            </property>
-            <widget class="QSpinBox" name="spinBox_DebounceDelay">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>71</width>
-               <height>22</height>
-              </rect>
+             <property name="title">
+              <string>Refresh Interval (Unit: seconds)</string>
              </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="title">
-             <string>Download Location</string>
-            </property>
-            <widget class="QLineEdit" name="lineEdit_DownloadLocation">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>701</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="pushButton_SelectDownloadLocation">
-             <property name="geometry">
-              <rect>
-               <x>720</x>
-               <y>20</y>
-               <width>21</width>
-               <height>23</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>110</height>
-             </size>
-            </property>
-            <property name="title">
-             <string>Network Agent</string>
-            </property>
-            <widget class="QComboBox" name="comboBox_AgentMode">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>111</width>
-               <height>22</height>
-              </rect>
-             </property>
-             <item>
-              <property name="text">
-               <string>Not Agent</string>
+             <widget class="QSpinBox" name="spinBox_RefreshInterval">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>71</width>
+                <height>22</height>
+               </rect>
               </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>HTTP Proxy</string>
+              <property name="maximum">
+               <number>3600</number>
               </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>SOCKS5 Proxy</string>
+             </widget>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_15">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>Download Location</string>
+             </property>
+             <widget class="QPushButton" name="pushButton_SelectDownloadLocation">
+              <property name="geometry">
+               <rect>
+                <x>660</x>
+                <y>20</y>
+                <width>71</width>
+                <height>23</height>
+               </rect>
               </property>
-             </item>
+              <property name="text">
+               <string>Change</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="lineEdit_DownloadLocation">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>641</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </widget>
-            <widget class="QPushButton" name="pushButton_AgentTest">
-             <property name="geometry">
-              <rect>
-               <x>130</x>
-               <y>20</y>
-               <width>75</width>
-               <height>23</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_16">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Test</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>70</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Notify Bubble</string>
+             </property>
+             <widget class="QCheckBox" name="checkBox_NotifyBubble">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>361</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Turn on the bubble message notification.</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="checkBox_SystemTrayNotify">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>361</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Turn on system tray notifications.</string>
+              </property>
+             </widget>
             </widget>
-            <widget class="QPushButton" name="pushButton_AgentConfirm">
-             <property name="geometry">
-              <rect>
-               <x>220</x>
-               <y>20</y>
-               <width>75</width>
-               <height>23</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_19">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Confirm</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>90</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Close main window:</string>
+             </property>
+             <widget class="QRadioButton" name="radioButton_cmw_tray">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>721</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Minimize to system tray, program continues running</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="radioButton_cmw_exit">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>60</y>
+                <width>721</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Exit the program</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="radioButton_cmw_ask">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>721</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Always ask on close</string>
+              </property>
+             </widget>
             </widget>
-            <widget class="QLabel" name="label">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>50</y>
-               <width>91</width>
-               <height>21</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_20">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>65</height>
+              </size>
              </property>
-             <property name="text">
-              <string>Server</string>
+             <property name="title">
+              <string>Start:</string>
              </property>
+             <widget class="QCheckBox" name="checkBox_RunAtSystemStartup">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>301</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Run at system startup</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="checkBox_StartMinimizedToTray">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>301</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Start minimized to tray</string>
+              </property>
+             </widget>
             </widget>
-            <widget class="QLabel" name="label_2">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>76</y>
-               <width>91</width>
-               <height>21</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_17">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
-             <property name="text">
-              <string>UserName</string>
+             <property name="title">
+              <string>File Watcher Debounce Delay</string>
              </property>
+             <widget class="QSpinBox" name="spinBox_DebounceDelay">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>71</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+             </widget>
             </widget>
-            <widget class="QLineEdit" name="lineEdit_Server">
-             <property name="geometry">
-              <rect>
-               <x>110</x>
-               <y>50</y>
-               <width>151</width>
-               <height>21</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_18">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>115</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Network Agent</string>
+             </property>
+             <widget class="QPushButton" name="pushButton_AgentConfirm">
+              <property name="geometry">
+               <rect>
+                <x>220</x>
+                <y>20</y>
+                <width>75</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Confirm</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_4">
+              <property name="geometry">
+               <rect>
+                <x>270</x>
+                <y>80</y>
+                <width>91</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Password</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_2">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>76</y>
+                <width>91</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>UserName</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_3">
+              <property name="geometry">
+               <rect>
+                <x>270</x>
+                <y>50</y>
+                <width>91</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Port</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="lineEdit_Password">
+              <property name="geometry">
+               <rect>
+                <x>370</x>
+                <y>80</y>
+                <width>151</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="lineEdit_Server">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>50</y>
+                <width>151</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="lineEdit_Port">
+              <property name="geometry">
+               <rect>
+                <x>370</x>
+                <y>50</y>
+                <width>151</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="lineEdit_UserName">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>80</y>
+                <width>151</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_AgentTest">
+              <property name="geometry">
+               <rect>
+                <x>130</x>
+                <y>20</y>
+                <width>75</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Test</string>
+              </property>
+             </widget>
+             <widget class="QComboBox" name="comboBox_AgentMode">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>111</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <item>
+               <property name="text">
+                <string>Not Agent</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>HTTP Proxy</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>SOCKS5 Proxy</string>
+               </property>
+              </item>
+             </widget>
+             <widget class="QLabel" name="label">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>50</y>
+                <width>91</width>
+                <height>21</height>
+               </rect>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Server</string>
+              </property>
+             </widget>
             </widget>
-            <widget class="QLineEdit" name="lineEdit_UserName">
-             <property name="geometry">
-              <rect>
-               <x>110</x>
-               <y>80</y>
-               <width>151</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_3">
-             <property name="geometry">
-              <rect>
-               <x>270</x>
-               <y>50</y>
-               <width>91</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Port</string>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_4">
-             <property name="geometry">
-              <rect>
-               <x>270</x>
-               <y>80</y>
-               <width>91</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Password</string>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="lineEdit_Port">
-             <property name="geometry">
-              <rect>
-               <x>370</x>
-               <y>50</y>
-               <width>151</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="lineEdit_Password">
-             <property name="geometry">
-              <rect>
-               <x>370</x>
-               <y>80</y>
-               <width>151</width>
-               <height>21</height>
-              </rect>
-             </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -465,102 +682,197 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QWidget" name="widget_2" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="title">
-             <string>Debug Enable</string>
-            </property>
-            <widget class="QCheckBox" name="checkBox_DbgEnable">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>80</width>
-               <height>19</height>
-              </rect>
+        <widget class="QScrollArea" name="scrollArea_Debug">
+         <property name="styleSheet">
+          <string notr="true">QScrollArea#scrollArea_Debug {
+	border: none;
+}</string>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>776</width>
+            <height>354</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Enable</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Debug Enable</string>
+             </property>
+             <widget class="QCheckBox" name="checkBox_DbgEnable">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>531</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Enable (Do not enter Debug mode unless you know what you are doing.)</string>
+              </property>
+             </widget>
             </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_5">
-            <property name="title">
-             <string>Test</string>
-            </property>
-            <widget class="QPushButton" name="pushButton_TestCrash">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>75</width>
-               <height>23</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Test Crash</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Test</string>
+             </property>
+             <widget class="QPushButton" name="pushButton_TestCrash">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>75</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Test Crash</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_Restart">
+              <property name="geometry">
+               <rect>
+                <x>90</x>
+                <y>20</y>
+                <width>75</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Restart</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_SystemTray">
+              <property name="geometry">
+               <rect>
+                <x>170</x>
+                <y>20</y>
+                <width>75</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>SystemTray</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_Notification">
+              <property name="geometry">
+               <rect>
+                <x>250</x>
+                <y>20</y>
+                <width>121</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Test Notification</string>
+              </property>
+             </widget>
             </widget>
-            <widget class="QPushButton" name="pushButton_Restart">
-             <property name="geometry">
-              <rect>
-               <x>90</x>
-               <y>20</y>
-               <width>75</width>
-               <height>23</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Restart</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Logger</string>
+             </property>
+             <widget class="QPushButton" name="pushButton_OpenLogFolder">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>111</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Open Directory</string>
+              </property>
+             </widget>
             </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_6">
-            <property name="title">
-             <string>Logger</string>
-            </property>
-            <widget class="QPushButton" name="pushButton_OpenLogFolder">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>111</width>
-               <height>23</height>
-              </rect>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_7">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Open Directory</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>55</height>
+              </size>
              </property>
+             <property name="title">
+              <string>Configuration</string>
+             </property>
+             <widget class="QPushButton" name="pushButton_OpenCfg">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>111</width>
+                <height>23</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Open In Notepad</string>
+              </property>
+             </widget>
             </widget>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_7">
-            <property name="title">
-             <string>Configuration</string>
-            </property>
-            <widget class="QPushButton" name="pushButton_OpenCfg">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>111</width>
-               <height>23</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Open In Notepad</string>
-             </property>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>

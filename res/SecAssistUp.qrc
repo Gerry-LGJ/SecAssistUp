@@ -3,5 +3,8 @@
         <file>image/file.png</file>
         <file>image/folder.png</file>
         <file>image/favicon_nbg.png</file>
+        <file>image/download.png</file>
+        <file>image/upload.png</file>
+        <file>font/FluentIcons.ttf</file>
     </qresource>
 </RCC>

@@ -10,6 +10,7 @@
 #   include "common/app_dmp.h"
 #endif
 
+
 int main(int argc, char *argv[])
 {
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
@@ -18,6 +19,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     const char *uri = "SecAssistUp";
+
+    // once only
+    if (MainService::runOnceOnly() != 0) {
+        return 0;
+    }
 
 #ifdef WIN32
     ::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)MyUnhandledExceptionFilter);

@@ -4,8 +4,10 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
+#include <QShortcut>
 
 #include "../service/mainservice.h"
+#include "../helper/filicontools.h"
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,7 +15,6 @@ LoginWindow::LoginWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     mSettings       = SettingsHelper::getInstance();
-    mSettingsDialog = SettingsDialog::getInstance();
 }
 
 LoginWindow::~LoginWindow()
@@ -49,6 +50,12 @@ void LoginWindow::init()
         mAutoLogin = mSettings->getAutoLogin();
     }
 
+    // Enter Key Login
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    connect(shortcut, &QShortcut::activated, this->ui->pushButton_SignIn, &QPushButton::click);
+    QShortcut *shortcutEnter = new QShortcut(QKeySequence(Qt::Key_Enter), this);
+    connect(shortcutEnter, &QShortcut::activated, this->ui->pushButton_SignIn, &QPushButton::click);
+
     // Start Auto Login Timer
     QTimer::singleShot(500, this, [=] {
         qDebug() << "onTriggered Auto Login";
@@ -56,6 +63,10 @@ void LoginWindow::init()
             this->onClickPushButtonSignIn();
         }
     });
+
+    // init Settings Button
+    this->ui->pushButton_Settings->setFont(FilIconTools::font());
+    this->ui->pushButton_Settings->setText(FilIconTools::convert(FilIcons::Type::Settings));
 }
 
 bool LoginWindow::getRememberMe()
@@ -87,7 +98,8 @@ void LoginWindow::onClickPushButtonSignIn()
 void LoginWindow::onClickPushButtonSettings()
 {
     qDebug() << __func__;
-    mSettingsDialog->show();
+    SettingsDialog settings(this);
+    settings.exec();
 }
 
 void LoginWindow::onStateChangedRememberMe(int state)
@@ -134,42 +146,7 @@ bool LoginWindow::event(QEvent *e)
 void LoginWindow::closeEvent(QCloseEvent *event)
 {
     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
-    MainService *mMainService        = MainService::getInstance();
-    QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
-
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("Quit"));
-    msgBox.setText(tr("Are you sure you want to exit the program ?"));
-    msgBox.setIcon(QMessageBox::Question);
-    // add button
-    QPushButton *cancelBtn   = msgBox.addButton(tr("Cancel"),   QMessageBox::ActionRole);
-    QPushButton *minimizeBtn = msgBox.addButton(tr("Minimize"), QMessageBox::ActionRole);
-    QPushButton *quitBtn     = msgBox.addButton(tr("Quit"),     QMessageBox::ActionRole);
-    msgBox.setDefaultButton(quitBtn);
-
-    // run exec()
-    msgBox.exec();
-
-    if (msgBox.clickedButton() == minimizeBtn) {
-        if (mSystemTrayIcon->isVisible()) {
-            qDebug() << "LoginWindow::closeEvent" << "hide window";
-            hide();
-            event->ignore();
-            // Display the prompt message
-            mSystemTrayIcon->showMessage("Friendly Reminder",
-                                         "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
-                                         QIcon(":/image/favicon_nbg.png"),
-                                         3000);
-        }
-    } else if (msgBox.clickedButton() == quitBtn) {
-        mSystemTrayIcon->hide();
-        QApplication::quit();
-        event->accept();
-    } else if (msgBox.clickedButton() == cancelBtn) {
-        event->ignore();
-    } else {
-        event->ignore();
-    }
+    MainService::getInstance()->closeEvent(this, event);
 }
 
 bool LoginWindow::mSEventHandler(MSEvent *e)

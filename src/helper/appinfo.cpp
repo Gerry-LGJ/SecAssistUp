@@ -8,7 +8,13 @@
 AppInfo::AppInfo(QObject *parent)
     : QObject{parent}
 {
-    version(APPLICATION_VERSION);
+    QString ver = QString(APPLICATION_VERSION);
+#ifdef QT_DEBUG
+    ver += " Debug";
+#else
+    ver += " Release";
+#endif
+    version(ver);
 #if 1
     debugEnable(SettingsHelper::getInstance()->getDebugEnable());
 #else

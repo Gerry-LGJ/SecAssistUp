@@ -23,7 +23,6 @@ void LoginService::init()
     mLoginReqSender = nullptr;
     initLoginNetworkCallable();
     transition(STATE_TYPE_LOGOUT);
-    mLoginWindow->show();
 }
 
 void LoginService::initLoginNetworkCallable()

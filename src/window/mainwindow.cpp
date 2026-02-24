@@ -15,6 +15,8 @@
 #include "../service/mainservice.h"
 #include "../widgets/settingsdialog.h"
 #include "../widgets/projectinfodialog.h"
+#include "../widgets/notificationform.h"
+#include "../helper/filicontools.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     mFilTools              = FilTools::getInstance();
     mSettingsHelper        = SettingsHelper::getInstance();
     mWinTaskbarButton      = new QWinTaskbarButton(this);
+    mWinThumbnailToolBar   = new QWinThumbnailToolBar(this);
 }
 
 MainWindow::~MainWindow()
@@ -47,6 +50,7 @@ void MainWindow::init()
     initTableWidgetProjects();
     initListWidgetUploadFiles();
     initProgressBar();
+    initThumbnailToolBar();
 
     int index     = mSettingsHelper->getAppDownloadMode();
     { // not send QComboBox::currentIndexChanged Signal
@@ -76,9 +80,11 @@ void MainWindow::initPushButton()
     });
     // Settings Button
     connect(this->ui->pushButton_Settings, &QPushButton::clicked, this, [=] {
-        SettingsDialog *mSettingsDialog = SettingsDialog::getInstance();
-        mSettingsDialog->show();
+        SettingsDialog settings(this);
+        settings.exec();
     });
+    this->ui->pushButton_Settings->setFont(FilIconTools::font());
+    this->ui->pushButton_Settings->setText(FilIconTools::convert(FilIcons::Type::Settings));
     // Logout Button
     connect(this->ui->pushButton_Logout, &QPushButton::clicked, this, [=] {
         FileWatcherService *mFWService  = FileWatcherService::getInstance();
@@ -228,37 +234,7 @@ void MainWindow::initPushButton()
 
     /* Buttom Bar */
     // Downlaod Button
-    connect(this->ui->pushButton_Download, &QPushButton::clicked, this, [=] {
-        qDebug() << "onClick Download Button";
-        RefreshService *mRefreshService = RefreshService::getInstance();
-        QList<file_t> list              = mRefreshService->getFileList();
-        QListWidget *lwwfs              = mListWidgetWebFiles;
-        QList<QListWidgetItem *> items  = lwwfs->selectedItems();
-        QStringList downFiles;
-        project_info_t pinfo            = mActiveProjectInfo;
-        QString dir    = mSettingsHelper->getAppDownloadMode() == 0 ? mSettingsHelper->getAppDownloadDir() : pinfo.wdir;
-        QString webdir = mRefreshService->getPathByPathList(mRefreshService->getPathList());
-        if (!QFileInfo().exists(dir)) {
-            QMessageBox::information(this, tr("Reminder"), tr("Download Directory Not Exists.") + "\n" + dir);
-            return ;
-        }
-        qDebug() << "Append Download Files items.size():" << items.size();
-        if (items.size() > 0) {
-            for (int i = 0; i < items.size(); ++i) {
-                file_t info = list.at(lwwfs->row(items.at(i)));
-                downFiles.append(info.name);
-            }
-            qDebug() << "Downlaod files:" << downFiles;
-            QVariantMap map;
-            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_DOWNLOAD_REQ);
-            map["files"]   = downFiles;
-            map["dir"]     = dir;
-            map["webdir"]  = webdir;
-            map["script"]  = pinfo.rds ? pinfo.dspath : "";
-            event->setData(QVariant(map));
-            QCoreApplication::postEvent(mMainService, event);
-        }
-    });
+    connect(this->ui->pushButton_Download, &QPushButton::clicked, this, &MainWindow::onClickPushButtonDownload);
     // Upload_l Button
     connect(this->ui->pushButton_Upload_l, &QPushButton::clicked, this, [=] {
         qDebug() << "onClick Upload_l Button";
@@ -281,35 +257,7 @@ void MainWindow::initPushButton()
         }
     });
     // Upload_r Button
-    connect(this->ui->pushButton_Upload_r, &QPushButton::clicked, this, [=] {
-        qDebug() << "onClick Upload_r Button";
-        RefreshService *mRefreshService = RefreshService::getInstance();
-        QList<uf_info_t> files          = mUploadFilesInfo;
-        QListWidget *lwufs              = mListWidgetUploadFiles;
-        QStringList uploadfiles;
-        project_info_t pinfo            = mActiveProjectInfo;
-        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
-
-        if (files.size() > 0) {
-            for (int i = 0; i < files.size(); ++i) {
-                uf_info_t info = files.at(i);
-                qDebug() << __func__ << "fid:" << info.fid << "pid:" << info.pid << "name:" << info.name << "dir:" << info.dir << "enable:" << info.enable;
-                if (info.enable) {
-                    QString filepath = info.dir + "/" + info.name;
-                    uploadfiles.append(filepath);
-                }
-            }
-            qDebug() << "pushButton_Upload_r:" << uploadfiles;
-            QVariantMap map;
-            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_UPLOAD_REQ);
-            map["files"]   = uploadfiles;
-            map["dir"]     = pinfo.wdir;
-            map["webdir"]  = webdir;
-            map["script"]  = pinfo.rus ? pinfo.uspath : "";
-            event->setData(QVariant(map));
-            QCoreApplication::postEvent(mMainService, event);
-        }
-    });
+    connect(this->ui->pushButton_Upload_r, &QPushButton::clicked, this, &MainWindow::onClickPushButtonUpload_r);
 }
 
 void MainWindow::initListWidgetWebFiles()
@@ -453,6 +401,36 @@ void MainWindow::initProgressBar()
     uploadFile->setText("");
 }
 
+void MainWindow::initThumbnailToolBar()
+{
+    static bool initialized = false;
+    QWindow *win            = windowHandle();
+    if (initialized == false && win != nullptr) {
+        initialized = true;
+        qDebug() << __func__ << "MainWindow::initThumbnailToolBar" << win;
+        mWinThumbnailToolBar->setWindow(win);
+        QWinThumbnailToolButton *downBtn = new QWinThumbnailToolButton(mWinThumbnailToolBar);
+        downBtn->setIcon(QIcon(":/image/download.png"));
+        downBtn->setToolTip(tr("Downlaod"));
+        downBtn->setDismissOnClick(true);
+        connect(downBtn, &QWinThumbnailToolButton::clicked, this, [=] {
+            // qDebug() << "MainWindow::initThumbnailToolBar onClick Downlaod Button.";
+            onClickPushButtonDownload();
+        });
+        QWinThumbnailToolButton *upBtn   = new QWinThumbnailToolButton(mWinThumbnailToolBar);
+        upBtn->setIcon(QIcon(":/image/upload.png"));
+        upBtn->setToolTip(tr("Upload"));
+        upBtn->setDismissOnClick(true);
+        connect(upBtn, &QWinThumbnailToolButton::clicked, this, [=] {
+            // qDebug() << "MainWindow::initThumbnailToolBar onClick Upload Button.";
+            onClickPushButtonUpload_r();
+        });
+
+        mWinThumbnailToolBar->addButton(downBtn);
+        mWinThumbnailToolBar->addButton(upBtn);
+    }
+}
+
 void MainWindow::initPDBHCbReadAll()
 {
     mPDBHCbReadAll              = new ProjectDbHelperCallable(this);
@@ -513,6 +491,71 @@ void MainWindow::initUFDBHCbReadAllByPid()
         uf_info_t info = { fid, pid, name, dir, enable };
         mUploadFilesInfo.append(info);
     });
+}
+
+void MainWindow::onClickPushButtonDownload()
+{
+    qDebug() << __func__;
+    MainService *mMainService       = MainService::getInstance();
+    RefreshService *mRefreshService = RefreshService::getInstance();
+    QList<file_t> list              = mRefreshService->getFileList();
+    QListWidget *lwwfs              = mListWidgetWebFiles;
+    QList<QListWidgetItem *> items  = lwwfs->selectedItems();
+    QStringList downFiles;
+    project_info_t pinfo            = mActiveProjectInfo;
+    QString dir    = mSettingsHelper->getAppDownloadMode() == 0 ? mSettingsHelper->getAppDownloadDir() : pinfo.wdir;
+    QString webdir = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+    if (!QFileInfo().exists(dir)) {
+        QMessageBox::information(this, tr("Reminder"), tr("Download Directory Not Exists.") + "\n" + dir);
+        return ;
+    }
+    qDebug() << "Append Download Files items.size():" << items.size();
+    if (items.size() > 0) {
+        for (int i = 0; i < items.size(); ++i) {
+            file_t info = list.at(lwwfs->row(items.at(i)));
+            downFiles.append(info.name);
+        }
+        qDebug() << "Downlaod files:" << downFiles;
+        QVariantMap map;
+        MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_DOWNLOAD_REQ);
+        map["files"]   = downFiles;
+        map["dir"]     = dir;
+        map["webdir"]  = webdir;
+        map["script"]  = pinfo.rds ? pinfo.dspath : "";
+        event->setData(QVariant(map));
+        QCoreApplication::postEvent(mMainService, event);
+    }
+}
+
+void MainWindow::onClickPushButtonUpload_r()
+{
+    qDebug() << __func__;
+    MainService *mMainService       = MainService::getInstance();
+    RefreshService *mRefreshService = RefreshService::getInstance();
+    QList<uf_info_t> files          = mUploadFilesInfo;
+    QStringList uploadfiles;
+    project_info_t pinfo            = mActiveProjectInfo;
+    QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+
+    if (files.size() > 0) {
+        for (int i = 0; i < files.size(); ++i) {
+            uf_info_t info = files.at(i);
+            qDebug() << __func__ << "fid:" << info.fid << "pid:" << info.pid << "name:" << info.name << "dir:" << info.dir << "enable:" << info.enable;
+            if (info.enable) {
+                QString filepath = info.dir + "/" + info.name;
+                uploadfiles.append(filepath);
+            }
+        }
+        qDebug() << "pushButton_Upload_r:" << uploadfiles;
+        QVariantMap map;
+        MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_UPLOAD_REQ);
+        map["files"]   = uploadfiles;
+        map["dir"]     = pinfo.wdir;
+        map["webdir"]  = webdir;
+        map["script"]  = pinfo.rus ? pinfo.uspath : "";
+        event->setData(QVariant(map));
+        QCoreApplication::postEvent(mMainService, event);
+    }
 }
 
 void MainWindow::initPDBHCbSearch()
@@ -679,6 +722,27 @@ void MainWindow::setSelectDownloadMode(int index)
         qWarning() << "Invalid index.";
     }
 
+}
+
+void MainWindow::notifyBubble(const QString &title, const QStringList &files)
+{
+    int count              = files.length();
+    if (count == 0) {
+        qDebug() << __func__ << "files.length() == 0.";
+        return ;
+    }
+
+    if (isActiveWindow()) {
+        qDebug() << __func__ << "Current Window is actived.";
+        return ;
+    }
+
+    QStringList names;
+    for (int i = 0; i < files.length(); ++i) {
+        names.append(QFileInfo(files.at(i)).fileName());
+    }
+    NotificationForm *form = new NotificationForm(title, names);
+    form->showAtScreenCorner();
 }
 
 bool MainWindow::updateProjectInfoToUI()
@@ -850,6 +914,10 @@ bool MainWindow::mSEventHandler(MSEvent *e)
         uint16_t resultCode = map["resultCode"].toUInt();
         qDebug() << "resultCode:" << resultCode;
         if (resultCode == MSEvent::RESULT_CODE_SUCCESS) {
+            QStringList okFiles    = map["okFiles"].toStringList();
+            int count              = okFiles.length();
+            QString title          = QString(tr("%1 file(s) uploaded")).arg(count);
+            notifyBubble(title, okFiles);
             qDebug() << "Upload Succeed.";
 
         } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
@@ -913,6 +981,7 @@ bool MainWindow::event(QEvent *e)
             if (win) {
                 mWinTaskbarButton->setWindow(win);
                 mWinTaskbarProgress = mWinTaskbarButton->progress();
+                initThumbnailToolBar();
             }
         }
     }
@@ -922,40 +991,5 @@ bool MainWindow::event(QEvent *e)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
-    MainService *mMainService        = MainService::getInstance();
-    QSystemTrayIcon *mSystemTrayIcon = mMainService->getSystemTrayIcon();
-
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("Quit"));
-    msgBox.setText(tr("Are you sure you want to exit the program ?"));
-    msgBox.setIcon(QMessageBox::Question);
-    // add button
-    QPushButton *cancelBtn   = msgBox.addButton(tr("Cancel"),   QMessageBox::ActionRole);
-    QPushButton *minimizeBtn = msgBox.addButton(tr("Minimize"), QMessageBox::ActionRole);
-    QPushButton *quitBtn     = msgBox.addButton(tr("Quit"),     QMessageBox::ActionRole);
-    msgBox.setDefaultButton(quitBtn);
-
-    // run exec()
-    msgBox.exec();
-
-    if (msgBox.clickedButton() == minimizeBtn) {
-        if (mSystemTrayIcon->isVisible()) {
-            qDebug() << "MainWindow::closeEvent" << "hide window";
-            hide();
-            event->ignore();
-            // Display the prompt message
-            mSystemTrayIcon->showMessage("Friendly Reminder",
-                                         "SecAssistUp is hidden from the tray, click on the tray to activate the window again.",
-                                         QIcon(":/image/favicon_nbg.png"),
-                                         3000);
-        }
-    } else if (msgBox.clickedButton() == quitBtn) {
-        mSystemTrayIcon->hide();
-        QApplication::quit();
-        event->accept();
-    } else if (msgBox.clickedButton() == cancelBtn) {
-        event->ignore();
-    } else {
-        event->ignore();
-    }
+    MainService::getInstance()->closeEvent(this, event);
 }

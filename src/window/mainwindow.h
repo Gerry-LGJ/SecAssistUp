@@ -6,6 +6,8 @@
 #include <QTableWidget>
 #include <QWinTaskbarButton>
 #include <QWinTaskbarProgress>
+#include <QWinThumbnailToolBar>
+#include <QWinThumbnailToolButton>
 
 #include "../service/msevent.h"
 #include "../common/singleton.h"
@@ -65,6 +67,7 @@ private:
     SettingsHelper              *mSettingsHelper;
     QWinTaskbarButton           *mWinTaskbarButton;
     QWinTaskbarProgress         *mWinTaskbarProgress;
+    QWinThumbnailToolBar        *mWinThumbnailToolBar;
 
     // func
     MainWindow(QWidget *parent = nullptr);
@@ -74,14 +77,19 @@ private:
     void initTableWidgetProjects(void);
     void initListWidgetUploadFiles(void);
     void initProgressBar(void);
+    void initThumbnailToolBar(void);
     void initPDBHCbReadAll(void);
     void initPDBHCbSearch(void);
     void initUFDBHCbReadAllByPid(void);
+    void onClickPushButtonDownload(void);
+    void onClickPushButtonUpload_r(void);
     void updateTableWidgetDataFromProjectsInfo();
     void updateListWidgetDataFromUploadFilesInfo();
     bool updateWebFilesToUI();
     void setSelectProjectName(QString text);
     void setSelectDownloadMode(int index);
+    // Notification Bubble
+    void notifyBubble(const QString &title, const QStringList &files);
 
     bool mSEventHandler(MSEvent *e);
 };

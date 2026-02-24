@@ -55,3 +55,8 @@ QString SettingsHelper::getIniFilePath()
 {
     return mIniFilePath;
 }
+
+void SettingsHelper::sync()
+{
+    mSettings->sync();
+}

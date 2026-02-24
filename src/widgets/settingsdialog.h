@@ -2,8 +2,10 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
+#include <QWidget>
+#include <QEventLoop>
+#include <QButtonGroup>
 
-#include "../common/singleton.h"
 #include "../helper/settingshelper.h"
 #include "../helper/appinfo.h"
 #include "../helper/filtools.h"
@@ -17,7 +19,7 @@ class SettingsDialog : public QDialog
 {
     Q_OBJECT
 
-private:
+public:
     explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog();
 
@@ -27,8 +29,7 @@ public:
         AGENT_MODE_HTTP_PROXY,
         AGENT_MODE_SOCKS5_PROXY
     };
-    SINGLETON(SettingsDialog)
-    void init();
+    static void initRunAtSystemStartup(void);
 
 // protected:
 //     void closeEvent(QCloseEvent *event) override ;
@@ -38,12 +39,19 @@ private slots:
     void onDbgEnableStateChanged(int state);
     void onClickPushButtonTestCrash();
     void onClickPushButtonRestart();
+    void onClickPushButtonSystemTray();
+    void onClickPushButtonNotification();
     void onClickPushButtonOpenLoggerFolder();
     void onClickPushButtonOpenConfiguration();
     // Common Page
     void onValueChangedSpinBoxRefreshInterval(int i);
-    void onValueChangedSpinBox_DebounceDelay(int i);
     void onClickPushButtonSelectDownloadLocation();
+    void onNotifyBubbleStateChanged(int state);
+    void onSystemTrayNotifyStateChanged(int state);
+    void onClickRadioButtonCloseMainWindow(QAbstractButton *button);
+    void onRunAtSystemStartupStateChanged(int state);
+    void onStartMinimizedToTrayStateChanged(int state);
+    void onValueChangedSpinBox_DebounceDelay(int i);
     void onCurrentIndexChangedComboBoxAgentMode(int index);
     void onClickPushButtonAgentTest();
     void onClickPushButtonAgentConfirm();
@@ -56,7 +64,9 @@ private:
     bool                mAgentTesting;
     Network            *mNetwork;
     NetworkCallable    *mAgentTestCallable;
+    QButtonGroup       *mCMWButtonGroup;
 
+    void init();
     void reloadConfigurationsFromSettings();
     void reloadAgentConfigurations();
 };
