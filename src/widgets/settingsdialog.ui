@@ -55,7 +55,7 @@
             <x>0</x>
             <y>0</y>
             <width>759</width>
-            <height>595</height>
+            <height>657</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -178,7 +178,7 @@
                </rect>
               </property>
               <property name="text">
-               <string>Turn on the bubble message notification.</string>
+               <string>Turn on the bubble message notification</string>
               </property>
              </widget>
              <widget class="QCheckBox" name="checkBox_SystemTrayNotify">
@@ -191,7 +191,52 @@
                </rect>
               </property>
               <property name="text">
-               <string>Turn on system tray notifications.</string>
+               <string>Turn on system tray notifications</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>Language</string>
+             </property>
+             <widget class="QRadioButton" name="radioButton_lang_en_US">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>20</y>
+                <width>95</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string notr="true">English</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="radioButton_lang_zh_CN">
+              <property name="geometry">
+               <rect>
+                <x>120</x>
+                <y>20</y>
+                <width>95</width>
+                <height>19</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string notr="true">简体中文</string>
               </property>
              </widget>
             </widget>
@@ -575,7 +620,7 @@
             </rect>
            </property>
            <property name="text">
-            <string>TimeChicken</string>
+            <string notr="true">TimeChicken</string>
            </property>
           </widget>
          </widget>
@@ -601,7 +646,7 @@
             </rect>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
           </widget>
          </widget>
@@ -627,7 +672,7 @@
             </rect>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
           </widget>
          </widget>
@@ -653,7 +698,7 @@
             </rect>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
           </widget>
          </widget>
@@ -784,18 +829,18 @@
                <rect>
                 <x>170</x>
                 <y>20</y>
-                <width>75</width>
+                <width>91</width>
                 <height>23</height>
                </rect>
               </property>
               <property name="text">
-               <string>SystemTray</string>
+               <string>System Tray</string>
               </property>
              </widget>
              <widget class="QPushButton" name="pushButton_Notification">
               <property name="geometry">
                <rect>
-                <x>250</x>
+                <x>270</x>
                 <y>20</y>
                 <width>121</width>
                 <height>23</height>

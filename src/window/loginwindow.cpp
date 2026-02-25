@@ -139,6 +139,8 @@ bool LoginWindow::event(QEvent *e)
     if (e->type() == MSEvent::MSEVENT_BASE_TYPE) {
         MSEvent *event = static_cast<MSEvent *>(e);
         mSEventHandler(event);
+    } else if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
     }
     return QMainWindow::event(e);
 }

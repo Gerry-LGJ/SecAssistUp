@@ -38,6 +38,23 @@ if (MSVC)
 endif ()
 
 
+# ########## Add internationalization scripts ##########
+find_program(QT_LUPDATE NAMES lupdate lupdate-qt6)
+find_program(QT_LRELEASE NAMES lrelease lrelease-qt6)
+set(TS_FILES_DIR ${CMAKE_SOURCE_DIR}/res/lang)
+file(GLOB TS_FILE_PATHS ${TS_FILES_DIR}/ *.ts)
+add_custom_target(Script-Update-Translations
+    COMMENT "Start Run Script-Update-Translations ......"
+    COMMAND ${QT_LUPDATE} ${CMAKE_CURRENT_LIST_DIR} -ts res/lang/en_US.ts
+    COMMAND ${QT_LUPDATE} ${CMAKE_CURRENT_LIST_DIR} -ts res/lang/zh_CN.ts
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${APPLICATION_DIR_PATH}/i18n
+    COMMAND ${QT_LRELEASE} res/lang/en_US.ts -qm ${APPLICATION_DIR_PATH}/i18n/en_US.qm
+    COMMAND ${QT_LRELEASE} res/lang/zh_CN.ts -qm ${APPLICATION_DIR_PATH}/i18n/zh_CN.qm
+    SOURCES ${TS_FILE_PATHS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+)
+
+
 # ########## Configurate Directory ##########
 set(SRC_DIR src)
 set(RES_DIR res)
@@ -152,6 +169,11 @@ else()
         )
     endif()
 endif()
+
+
+# ########## Add compilation item dependency ##########
+add_dependencies(${PROJECT_NAME} Script-Update-Translations)
+
 
 # ########## Release also supports logging of the code location. ##########
 target_compile_definitions(${PROJECT_NAME}

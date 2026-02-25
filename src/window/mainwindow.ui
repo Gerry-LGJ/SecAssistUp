@@ -20,7 +20,7 @@
    <enum>Qt::ActionsContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>File Isolation</string>
+   <string notr="true">File Isolation</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -163,7 +163,7 @@
           <string>Settings</string>
          </property>
          <property name="text">
-          <string>Settings</string>
+          <string notr="true"/>
          </property>
         </widget>
        </item>
@@ -307,6 +307,12 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>105</width>
+                  <height>0</height>
+                 </size>
                 </property>
                 <item>
                  <property name="text">
@@ -667,7 +673,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Downloading ...</string>
+             <string notr="true">Downloading ...</string>
             </property>
            </widget>
           </item>
@@ -705,7 +711,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Uploading ...</string>
+             <string notr="true">Uploading ...</string>
             </property>
            </widget>
           </item>

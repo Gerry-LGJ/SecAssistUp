@@ -2,6 +2,7 @@
 
 #include "helper/settingshelper.h"
 #include "helper/log.h"
+#include "helper/translatehelper.h"
 #include "service/mainservice.h"
 #include "version.h"
 #include "window/mainwindow.h"
@@ -20,11 +21,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     const char *uri = "SecAssistUp";
 
-    // once only
-    if (MainService::runOnceOnly() != 0) {
-        return 0;
-    }
-
 #ifdef WIN32
     ::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)MyUnhandledExceptionFilter);
 #endif
@@ -41,8 +37,17 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName("SecAssistUp");
     QApplication::setApplicationVersion(APPLICATION_VERSION);
 
-    Log::setup(argv, uri);
+
     SettingsHelper::getInstance()->init(argv);
+    TranslateHelper::getInstance()->init();
+
+    // once only
+    if (MainService::runOnceOnly() != 0) {
+        return 0;
+    }
+
+
+    Log::setup(argv, uri);
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);

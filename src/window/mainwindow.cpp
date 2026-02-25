@@ -124,7 +124,7 @@ void MainWindow::initPushButton()
         int index = mTableWidgetProjects->currentRow();
         if (index >= 0) {
             project_info_t info = mProjectsInfo.at(index);
-            QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Delete"),
+            QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Reminder"),
                                                                       QString(tr("Are you sure you want to delete:\n%1(%2)\n?")).arg(info.name, info.pid),
                                                                       QMessageBox::Yes | QMessageBox::No);
             if (reply == QMessageBox::Yes) {
@@ -183,7 +183,7 @@ void MainWindow::initPushButton()
         QListWidget *lwufs             = mListWidgetUploadFiles;
         QList<QListWidgetItem *> items = lwufs->selectedItems();
         if (items.size() > 0) {
-            QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Delete"), tr("Are you sure you want to delete the selected files?"));
+            QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Reminder"), tr("Are you sure you want to delete the selected files?"));
             if (reply == QMessageBox::Yes) {
                 for (int i = 0; i < items.size(); ++i) {
                     uf_info_t info = files.at(lwufs->row(items.at(i)));
@@ -598,10 +598,12 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
         twps->setItem(i, 1, new QTableWidgetItem(info.wdir));
         QTableWidgetItem *rds = new QTableWidgetItem();
         rds->setCheckState(info.rds ? Qt::Checked : Qt::Unchecked);
+        rds->setFlags(rds->flags() & ~Qt::ItemIsEditable);
         rds->setFlags(rds->flags() | Qt::ItemIsUserCheckable);
         twps->setItem(i, 2, rds);
         QTableWidgetItem *rus = new QTableWidgetItem();
         rus->setCheckState(info.rus ? Qt::Checked : Qt::Unchecked);
+        rus->setFlags(rus->flags() & ~Qt::ItemIsEditable);
         rus->setFlags(rus->flags() | Qt::ItemIsUserCheckable);
         twps->setItem(i, 3, rus);
         QPushButton *btn = new QPushButton("Options");
@@ -984,6 +986,8 @@ bool MainWindow::event(QEvent *e)
                 initThumbnailToolBar();
             }
         }
+    } else if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
     }
     return QMainWindow::event(e);
 }

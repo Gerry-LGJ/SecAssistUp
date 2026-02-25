@@ -48,6 +48,7 @@ private slots:
     void onClickPushButtonSelectDownloadLocation();
     void onNotifyBubbleStateChanged(int state);
     void onSystemTrayNotifyStateChanged(int state);
+    void onClickRadioButtonLanguage(QAbstractButton *button);
     void onClickRadioButtonCloseMainWindow(QAbstractButton *button);
     void onRunAtSystemStartupStateChanged(int state);
     void onStartMinimizedToTrayStateChanged(int state);
@@ -55,6 +56,9 @@ private slots:
     void onCurrentIndexChangedComboBoxAgentMode(int index);
     void onClickPushButtonAgentTest();
     void onClickPushButtonAgentConfirm();
+
+protected:
+    bool event(QEvent *e) override;
 
 private:
     Ui::SettingsDialog *ui;
@@ -65,6 +69,7 @@ private:
     Network            *mNetwork;
     NetworkCallable    *mAgentTestCallable;
     QButtonGroup       *mCMWButtonGroup;
+    QButtonGroup       *mLanguageButtonGroup;
 
     void init();
     void reloadConfigurationsFromSettings();

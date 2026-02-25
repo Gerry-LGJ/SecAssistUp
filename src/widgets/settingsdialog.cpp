@@ -11,18 +11,20 @@
 #include "../window/mainwindow.h"
 #include "../widgets/notificationform.h"
 #include "../widgets/notificationbubble.h"
+#include "../helper/translatehelper.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
-    mSettingsHelper    = SettingsHelper::getInstance();
-    mFilTools          = FilTools::getInstance();
-    mAppInfo           = AppInfo::getInstance();
-    mNetwork           = Network::getInstance();
-    mAgentTestCallable = new NetworkCallable(this);
-    mCMWButtonGroup    = new QButtonGroup(this);
+    mSettingsHelper      = SettingsHelper::getInstance();
+    mFilTools            = FilTools::getInstance();
+    mAppInfo             = AppInfo::getInstance();
+    mNetwork             = Network::getInstance();
+    mAgentTestCallable   = new NetworkCallable(this);
+    mCMWButtonGroup      = new QButtonGroup(this);
+    mLanguageButtonGroup = new QButtonGroup(this);
     init();
 }
 
@@ -78,6 +80,10 @@ void SettingsDialog::init()
     mCMWButtonGroup->addButton(this->ui->radioButton_cmw_tray);
     mCMWButtonGroup->addButton(this->ui->radioButton_cmw_exit);
     connect(mCMWButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonCloseMainWindow);
+    // init Language Radio Button
+    mLanguageButtonGroup->addButton(this->ui->radioButton_lang_en_US);
+    mLanguageButtonGroup->addButton(this->ui->radioButton_lang_zh_CN);
+    connect(mLanguageButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonLanguage);
 
     // reload settings to UI
     reloadConfigurationsFromSettings();
@@ -171,7 +177,7 @@ void SettingsDialog::onClickPushButtonNotification()
 {
     qDebug() << __func__;
 #if 0
-    NotificationBubble *form = new NotificationBubble("您的消息内容\n您的消息内容您的\n消息内容您的消息内容您\n的消息内容您的\n消息内容\n", 5000);
+    NotificationBubble *form = new NotificationBubble("The content of your message.", 5000);
     form->showAtScreenCorner();
 #else
     static int count = 0;
@@ -228,6 +234,20 @@ void SettingsDialog::onSystemTrayNotifyStateChanged(int state)
     } else if (state == Qt::PartiallyChecked) {
     } else if (state == Qt::Checked) {
         mSettingsHelper->saveAppSystemNotify(true);
+    }
+}
+
+void SettingsDialog::onClickRadioButtonLanguage(QAbstractButton *button)
+{
+    if (button == this->ui->radioButton_lang_en_US) {
+        mSettingsHelper->saveLanguage("en_US");
+        TranslateHelper::getInstance()->switchLanguage("en_US");
+    } else if (button == this->ui->radioButton_lang_zh_CN) {
+        mSettingsHelper->saveLanguage("zh_CN");
+        TranslateHelper::getInstance()->switchLanguage("zh_CN");
+    } else {
+        mSettingsHelper->saveLanguage("en_US");
+        TranslateHelper::getInstance()->switchLanguage("en_US");
     }
 }
 
@@ -365,6 +385,14 @@ void SettingsDialog::onClickPushButtonAgentConfirm()
     reloadAgentConfigurations();
 }
 
+bool SettingsDialog::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    return QDialog::event(e);
+}
+
 void SettingsDialog::reloadConfigurationsFromSettings()
 {
     qDebug() << __func__;
@@ -439,6 +467,17 @@ void SettingsDialog::reloadConfigurationsFromSettings()
             this->ui->radioButton_cmw_exit->setChecked(true);
         } else { // default "ask"
             this->ui->radioButton_cmw_ask->setChecked(true);
+        }
+    }
+    {
+        QString lang = mSettingsHelper->getLanguage(TranslateHelper::getInstance()->getLocaleLanguage());
+        const QSignalBlocker blocker(this->mLanguageButtonGroup);
+        if (lang == "en_US") {
+            this->ui->radioButton_lang_en_US->setChecked(true);
+        } else if (lang == "zh_CN") {
+            this->ui->radioButton_lang_zh_CN->setChecked(true);
+        } else {
+            this->ui->radioButton_lang_en_US->setChecked(true);
         }
     }
 

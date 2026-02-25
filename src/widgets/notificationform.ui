@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -88,7 +88,7 @@ border: 1px solid #bbbbbb;
          <item>
           <widget class="QLabel" name="label_Title">
            <property name="text">
-            <string>SecAssistUp</string>
+            <string notr="true">SecAssistUp</string>
            </property>
           </widget>
          </item>
@@ -129,7 +129,7 @@ QPushButton:hover {
 /*}*/</string>
            </property>
            <property name="text">
-            <string>X</string>
+            <string notr="true">X</string>
            </property>
           </widget>
          </item>
@@ -173,21 +173,6 @@ QPushButton:hover {
 border: 0px solid #ffffff;
 }</string>
            </property>
-           <item>
-            <property name="text">
-             <string>test file 1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>test file 2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>test file 3</string>
-            </property>
-           </item>
           </widget>
          </item>
         </layout>

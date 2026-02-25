@@ -144,6 +144,7 @@ public:
         setValue(APP_LANGUAGE, language);
     }
     Q_INVOKABLE QString getLanguage(const QVariant def = QVariant("en_US")) {
+        // en_US, zh_CN
         return value(APP_LANGUAGE, def).toString();
     }
 

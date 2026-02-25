@@ -26,6 +26,9 @@ public:
     void init();
     void openWithPid(QString pid);
 
+protected:
+    bool event(QEvent *e) override;
+
 private:
     Ui::ProjectInfoDialog *ui;
     SettingsHelper     *mSettingsHelper;

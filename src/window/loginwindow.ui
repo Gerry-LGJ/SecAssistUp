@@ -297,10 +297,10 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Settings</string>
+             <string notr="true">Settings</string>
             </property>
             <property name="text">
-             <string>Settings</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>

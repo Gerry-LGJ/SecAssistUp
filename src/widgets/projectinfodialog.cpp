@@ -55,6 +55,14 @@ void ProjectInfoDialog::openWithPid(QString pid)
     this->show();
 }
 
+bool ProjectInfoDialog::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    return QDialog::event(e);
+}
+
 void ProjectInfoDialog::initPushButton()
 {
     // Button Box
