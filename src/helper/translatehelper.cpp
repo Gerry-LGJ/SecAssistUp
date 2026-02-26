@@ -17,9 +17,7 @@ void TranslateHelper::init()
     _translator = new QTranslator(this);
     QApplication::installTranslator(_translator);
     QString translatorDir = QApplication::applicationDirPath() + "/i18n";
-    QString translatorPath = QString::fromStdString("%1/%2_%3.qm").arg(translatorDir,
-                                                                       QApplication::applicationName(),
-                                                                       _current);
+    QString translatorPath = QString::fromStdString("%1/%2.qm").arg(translatorDir, _current);
     qDebug() << __func__ << translatorPath;
     if (_translator->load(translatorPath)) {
     } else {

@@ -915,12 +915,16 @@ bool MainWindow::mSEventHandler(MSEvent *e)
     case MSEvent::EVENT_TYPE_UPLOAD_CFM: {
         uint16_t resultCode = map["resultCode"].toUInt();
         qDebug() << "resultCode:" << resultCode;
+        MainService *mMainService  = MainService::getInstance();
         if (resultCode == MSEvent::RESULT_CODE_SUCCESS) {
             QStringList okFiles    = map["okFiles"].toStringList();
             int count              = okFiles.length();
             QString title          = QString(tr("%1 file(s) uploaded")).arg(count);
             notifyBubble(title, okFiles);
             qDebug() << "Upload Succeed.";
+            // After uploading, you need to refresh the file list.
+            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_REFRESH_REQ);
+            QCoreApplication::postEvent(mMainService, event);
 
         } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
             QString errorString = map["errorString"].toString();
