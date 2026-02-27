@@ -291,9 +291,9 @@
         <location filename="../../src/window/mainwindow.cpp" line="899"/>
         <location filename="../../src/window/mainwindow.cpp" line="901"/>
         <location filename="../../src/window/mainwindow.cpp" line="908"/>
-        <location filename="../../src/window/mainwindow.cpp" line="929"/>
-        <location filename="../../src/window/mainwindow.cpp" line="931"/>
-        <location filename="../../src/window/mainwindow.cpp" line="938"/>
+        <location filename="../../src/window/mainwindow.cpp" line="933"/>
+        <location filename="../../src/window/mainwindow.cpp" line="935"/>
+        <location filename="../../src/window/mainwindow.cpp" line="942"/>
         <source>Reminder</source>
         <translation>提示</translation>
     </message>
@@ -308,7 +308,7 @@
         <translation>已选择： </translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="921"/>
+        <location filename="../../src/window/mainwindow.cpp" line="922"/>
         <source>%1 file(s) uploaded</source>
         <translation>%1 个文件已上传</translation>
     </message>

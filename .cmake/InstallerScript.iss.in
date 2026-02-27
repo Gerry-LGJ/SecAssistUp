@@ -11,6 +11,7 @@
 #define MyAppFileDir        "dist"
 #define MyAppSourceDir      ".\.."
 #define MySignTool          "mysigntool"
+#define MyAppDataDir        "{localappdata}\TimeChicken\${PROJECT_NAME}"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -68,3 +69,41 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Registry]
+; Delete the startup items for the current user
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "{#MyAppName}"; Flags: deletevalue uninsdeletevalue;
+
+[Code]
+function GetUILanguage: Integer;
+external 'GetUserDefaultUILanguage@kernel32.dll stdcall';
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  DataPath: String;
+  MsgText:  String;
+begin
+  if CurUninstallStep = usUninstall then
+  begin
+    DataPath := ExpandConstant('{#MyAppDataDir}');
+
+    if GetUILanguage = $0804 then
+      MsgText := '是否保留个人数据？这包括您创建的所有工程和设置信息' + #13#10 +
+                 '路径：' + DataPath + #13#10#13#10 +
+                 '选择【是】将保留您的个人数据；' + #13#10 +
+                 '选择【否】将清除所有个人数据。'
+    else
+      MsgText := 'Keep personal data? This includes all your projects and settings' + #13#10 +
+                 'Path: ' + DataPath + #13#10#13#10 +
+                 'Select [Yes] to keep your personal data;' + #13#10 +
+                 'Select [No] to delete all personal data.'
+    ;
+
+    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDYES then
+    begin
+      DelTree(DataPath, True, True, True);
+    end;
+
+  end;
+end;
+
