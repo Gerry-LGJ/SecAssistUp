@@ -99,7 +99,7 @@ begin
                  'Select [No] to delete all personal data.'
     ;
 
-    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDYES then
+    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDNO then
     begin
       DelTree(DataPath, True, True, True);
     end;
