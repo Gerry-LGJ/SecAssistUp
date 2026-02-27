@@ -171,6 +171,7 @@ bool LoginWindow::mSEventHandler(MSEvent *e)
             } else {
                 mSettings->saveUserPassword("");
             }
+            mSettings->saveWebUrl(this->ui->lineEdit_WebUrl->text());
             mSettings->saveSavePassword(getRememberMe());
             mSettings->saveAutoLogin(getAutoLogin());
 
