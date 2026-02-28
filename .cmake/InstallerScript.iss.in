@@ -56,8 +56,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [CustomMessages]
-chinesesimplified.Msg_KeepData=是否保留个人数据？%n这包括您创建的所有工程和设置信息%n路径：%1 %n%n选择【是】将保留您的个人数据；%n选择【否】将清除所有个人数据。
-english.Msg_KeepData=Keep personal data? %nThis includes all your projects and settings%nPath: %1 %n%nSelect [Yes] to keep your personal data;%nSelect [No] to delete all personal data.
+chinesesimplified.Msg_InquiryKeepData=是否保留个人数据？%n这包括您创建的所有工程和设置信息%n路径：%1 %n%n选择【是】将保留您的个人数据；%n选择【否】将清除所有个人数据。
+english.Msg_InquiryKeepData=Keep personal data? %nThis includes all your projects and settings%nPath: %1 %n%nSelect [Yes] to keep your personal data;%nSelect [No] to delete all personal data.
 
 
 [Tasks]
@@ -92,7 +92,9 @@ begin
   begin
     DataPath := ExpandConstant('{#MyAppDataDir}');
 
-    if MsgBox({cm:Msg_KeepData,DataPath}, mbConfirmation, MB_YESNO) = IDNO then
+    MsgText := ExpandConstant('{cm:Msg_InquiryKeepData,' + DataPath + '}');
+    Log('MsgText.Msg_InquiryKeepData:' + #13#10 + MsgText);
+    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDNO then
     begin
       DelTree(DataPath, True, True, True);
     end;
