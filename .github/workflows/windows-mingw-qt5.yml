@@ -115,6 +115,14 @@ jobs:
                 name: ${{ steps.package.outputs.packageName }}
                 path: dist
 
+            - name: Convert to UTF-8 with BOM
+              shell: pwsh
+              run: |
+                # 读取生成的文件并添加BOM
+                $content = Get-Content -Path ./package/InstallerScript.iss -Raw -Encoding UTF8
+                # 添加UTF-8 BOM并保存
+                [System.IO.File]::WriteAllText("./package/InstallerScript.iss", $content, [System.Text.Encoding]::UTF8)
+
             - uses: actions/upload-artifact@v4
               with:
                 name: InstallerScript.iss
