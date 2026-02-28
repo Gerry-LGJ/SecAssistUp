@@ -115,6 +115,11 @@ jobs:
                 name: ${{ steps.package.outputs.packageName }}
                 path: dist
 
+            - uses: actions/upload-artifact@v4
+              with:
+                name: InstallerScript.iss
+                path: ./package/InstallerScript.iss
+
             - name: Print package/InstallerScript.iss Content
               shell: pwsh
               run: |
