@@ -5,12 +5,14 @@ on:
             - '*.txt'
             - 'src/**'
             - 'res/**'
+            - '.cmake/**'
             - '.github/workflows/windows-mingw-qt5.yml'
     pull_request:
         paths:
             - '*.txt'
             - 'src/**'
             - 'res/**'
+            - '.cmake/**'
             - '.github/workflows/windows-mingw-qt5.yml'
 
 jobs:
