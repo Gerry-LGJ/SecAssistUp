@@ -46,7 +46,7 @@ WizardStyle=modern
 ; install be done in "64-bit mode" on x64 or Windows 11 on Arm,
 ; meaning it should use the native 64-bit Program Files directory and
 ; the 64-bit view of the registry.
-; ArchitecturesInstallIn64BitMode=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 ; sign tool
 ; SignTool={#MySignTool}
 ; SignedUninstaller=yes
@@ -54,6 +54,11 @@ WizardStyle=modern
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+
+[CustomMessages]
+chinesesimplified.Msg_KeepData=是否保留个人数据？%n这包括您创建的所有工程和设置信息%n路径：%1 %n%n选择【是】将保留您的个人数据；%n选择【否】将清除所有个人数据。
+english.Msg_KeepData=Keep personal data? %nThis includes all your projects and settings%nPath: %1 %n%nSelect [Yes] to keep your personal data;%nSelect [No] to delete all personal data.
+
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
@@ -87,19 +92,7 @@ begin
   begin
     DataPath := ExpandConstant('{#MyAppDataDir}');
 
-    if GetUILanguage = $0804 then
-      MsgText := '是否保留个人数据？这包括您创建的所有工程和设置信息' + #13#10 +
-                 '路径：' + DataPath + #13#10#13#10 +
-                 '选择【是】将保留您的个人数据；' + #13#10 +
-                 '选择【否】将清除所有个人数据。'
-    else
-      MsgText := 'Keep personal data? This includes all your projects and settings' + #13#10 +
-                 'Path: ' + DataPath + #13#10#13#10 +
-                 'Select [Yes] to keep your personal data;' + #13#10 +
-                 'Select [No] to delete all personal data.'
-    ;
-
-    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDNO then
+    if MsgBox({cm:Msg_KeepData,DataPath}, mbConfirmation, MB_YESNO) = IDNO then
     begin
       DelTree(DataPath, True, True, True);
     end;

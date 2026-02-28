@@ -114,17 +114,21 @@ jobs:
                 path: dist
 
             - name: inno setup install
-              if: startsWith(github.event.ref, 'refs/tags/')
               uses: zhuzichu520/inno-setup-action@v1.0.1
               with:
                   filepath: ./package/InstallerScript.iss
+
+            - uses: actions/upload-artifact@v4
+              with:
+                name: ${{ env.fileName }}-${{ github.ref_name }}_setup.exe
+                path: package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
 
             - name: uploadRelease
               if: startsWith(github.event.ref, 'refs/tags/')
               uses: svenstaro/upload-release-action@v2
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                file: ./package/SecAssistUp-${{ github.ref_name }}_setup.exe
+                file: ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
                 asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
                 tag: ${{ github.ref }}
                 overwrite: true
