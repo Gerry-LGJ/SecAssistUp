@@ -115,15 +115,22 @@ jobs:
                 name: ${{ steps.package.outputs.packageName }}
                 path: dist
 
+            - name: Print package/InstallerScript.iss Content
+              shell: pwsh
+              run: |
+                Get-Content ./package/InstallerScript.iss
+
             - name: inno setup install
               uses: zhuzichu520/inno-setup-action@v1.0.1
               with:
                   filepath: ./package/InstallerScript.iss
 
             - uses: actions/upload-artifact@v4
+              if: ${{ !startsWith(github.event.ref, 'refs/tags/') }}
               with:
-                name: ${{ env.fileName }}-${{ github.ref_name }}_setup.exe
-                path: package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
+                # Default Tag Name is 1.0.0
+                name: ${{ env.fileName }}-1.0.0_setup.exe
+                path: ./package/${{ env.fileName }}-1.0.0_setup.exe
 
             - name: uploadRelease
               if: startsWith(github.event.ref, 'refs/tags/')
