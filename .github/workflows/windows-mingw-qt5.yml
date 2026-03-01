@@ -159,8 +159,8 @@ jobs:
               if: startsWith(github.event.ref, 'refs/tags/')
               shell: pwsh
               run: |
-                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force -WhatIf
-                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force
+                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force -WhatIf
+                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force
 
             - name: Create Release and Upload Assets
               if: startsWith(github.event.ref, 'refs/tags/')
