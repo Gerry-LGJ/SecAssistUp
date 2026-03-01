@@ -118,6 +118,7 @@ jobs:
             - name: Convert to UTF-8 with BOM
               shell: pwsh
               run: |
+                # InstallerScript.iss.in 默认生成 UTF-8 without BOM格式，脚本中的中文打包时会出现乱码，所以此处需要转换编码格式
                 # 读取生成的文件并添加BOM
                 $content = Get-Content -Path ./package/InstallerScript.iss -Raw -Encoding UTF8
                 # 添加UTF-8 BOM并保存
@@ -145,12 +146,28 @@ jobs:
                 name: ${{ env.fileName }}-1.0.0_setup.exe
                 path: ./package/${{ env.fileName }}-1.0.0_setup.exe
 
-            - name: uploadRelease
+            # - name: uploadRelease
+            #   if: startsWith(github.event.ref, 'refs/tags/')
+            #   uses: svenstaro/upload-release-action@v2
+            #   with:
+            #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+            #     file: ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
+            #     asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
+            #     tag: ${{ github.ref }}
+            #     overwrite: true
+            - name: Rename Upload Assets
               if: startsWith(github.event.ref, 'refs/tags/')
-              uses: svenstaro/upload-release-action@v2
+              shell: pwsh
+              run: |
+                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force -WhatIf
+                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force
+
+            - name: Create Release and Upload Assets
+              if: startsWith(github.event.ref, 'refs/tags/')
+              uses: softprops/action-gh-release@v2
               with:
-                repo_token: ${{ secrets.GITHUB_TOKEN }}
-                file: ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
-                asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
-                tag: ${{ github.ref }}
-                overwrite: true
+                files: ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
+                name: ${{ github.ref_name }}
+                generate_release_notes: true
+
+              
