@@ -217,6 +217,45 @@ QString FilTools::sha256(const QString &text)
     return QCryptographicHash::hash(text.toUtf8(), QCryptographicHash::Sha256).toHex();
 }
 
+QString FilTools::sha256CalculateFile(const QString &filePath, const std::function<void (qint64)> &progressCallback)
+{
+    QFile file(filePath);
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QString();
+    }
+
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+
+    const qint64 bufferSize = 64 * 1024; // 64KB
+    char buffer[bufferSize];
+
+    qint64 bytesRead;
+    qint64 totalBytesRead = 0;
+
+    while (!file.atEnd()) {
+        bytesRead = file.read(buffer, bufferSize);
+
+        if (bytesRead > 0) {
+            hash.addData(buffer, bytesRead);
+            totalBytesRead += bytesRead;
+
+            if (progressCallback) {
+                progressCallback(totalBytesRead);
+            }
+        }
+
+        if (bytesRead < 0) {
+            file.close();
+            return QString();
+        }
+    }
+
+    file.close();
+
+    return QString(hash.result().toHex());
+}
+
 QString FilTools::toBase64(const QString &text)
 {
     return text.toUtf8().toBase64();

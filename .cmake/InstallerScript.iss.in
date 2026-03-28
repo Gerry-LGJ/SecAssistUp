@@ -6,17 +6,18 @@
 #define MyAppFileVersion    "${GIT_SEMVER}.${GIT_COMMIT_COUNT}"
 #define MyAppPublisher      "TimeChicken"
 #define MyAppCopyright      "Copyright (C) 2023 TimeChicken. All rights reserved."
-#define MyAppURL            "https://gitee.com/time--chicken/SecAssistPro"
+#define MyAppURL            "https://github.com/Gerry-LGJ/SecAssistUp"
 #define MyAppExeName        "${PROJECT_NAME}.exe"
 #define MyAppFileDir        "dist"
 #define MyAppSourceDir      ".\.."
 #define MySignTool          "mysigntool"
 #define MyAppDataDir        "{localappdata}\TimeChicken\${PROJECT_NAME}"
+#define MyAppId             "693E34DD-2065-488E-B2C1-C91CBE20CAC8"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{693E34DD-2065-488E-B2C1-C91CBE20CAC8}
+AppId={{{#MyAppId}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -50,6 +51,8 @@ ArchitecturesInstallIn64BitMode=x64
 ; sign tool
 ; SignTool={#MySignTool}
 ; SignedUninstaller=yes
+DisableDirPage=auto
+ShowLanguageDialog=auto
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -83,6 +86,96 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: 
 function GetUILanguage: Integer;
 external 'GetUserDefaultUILanguage@kernel32.dll stdcall';
 
+function CmdLineParamExists(const ParamName: String): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := 1 to ParamCount do
+  begin
+    if CompareText(ParamStr(i), ParamName) = 0 then
+    begin
+      Result := True
+      Exit;
+    end;
+  end;
+end;
+
+function CmdLineGetParamValue(const ParamName: String; const DefaultValue: String): String;
+var
+  i: Integer;
+begin
+  Result := DefaultValue
+  for i := 1 to ParamCount do
+  begin
+    if CompareText(Copy(ParamStr(i), 1, Length(ParamName) + 1), ParamName + '=') = 0 then
+    begin
+      Result := Copy(ParamStr(i), Length(ParamName) + 2, Length(ParamStr(i)));
+      Log(Format('Found Param %s, value is %s', [ParamName, Result]));
+      Exit;
+    end;
+  end;
+end;
+
+function GetUninstallString(): String;
+var
+  sUninstPath        : String;
+  sUninstallString   : String;
+begin
+  sUninstPath        := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{{#MyAppId}}_is1'
+  sUninstallString   := '';
+  if not RegQueryStringValue(HKLM, sUninstPath, 'UninstallString', sUninstallString) then
+    RegQueryStringValue(HKCU, sUninstPath, 'UninstallString', sUninstallString);
+  Result := sUninstallString
+end;
+
+function RunUninstall(const Param: String): Boolean;
+var
+  sUninstallString: String;
+  iResultCode     : Integer;
+begin
+  Result := False;
+  sUninstallString := GetUninstallString();
+  if sUninstallString <> '' then
+  begin
+    sUnInstallString := RemoveQuotes(sUnInstallString);
+    if Exec(sUninstallString, Param, '', SW_SHOWNORMAL, ewWaitUntilTerminated, iResultCode) then
+    begin
+      Log('The silent uninstallation command for the old version has been executed, and the uninstallation process has been completed.');
+      Result := True;
+    end;
+  end;
+end;
+
+function InitializeSetup(): Boolean;
+var
+  sUninstallString: String;
+begin
+  Result := True
+
+  if CmdLineParamExists('/AUTOUNINSTALL') then
+  begin
+    RunUninstall('/SILENT /SUPPRESSMSGBOXES /NORESTART');
+  end;
+
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+begin
+  if (CurStep = ssDone) and CmdLineParamExists('/LAUNCHAPP') and CmdLineParamExists('/SILENT') then
+  begin
+    if Exec(ExpandConstant('{app}\{#MyAppExeName}'), '', '', SW_SHOWNORMAL, ewNoWait, ResultCode) then
+    begin
+      Log('Launch Program Succeed.');
+    end else
+    begin
+      Log(Format('Launch Program Failure. code:%d', [ResultCode]));
+    end;
+  end;
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   DataPath: String;
@@ -94,9 +187,12 @@ begin
 
     MsgText := ExpandConstant('{cm:Msg_InquiryKeepData,' + DataPath + '}');
     Log('MsgText.Msg_InquiryKeepData:' + #13#10 + MsgText);
-    if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDNO then
+    if not CmdLineParamExists('/SILENT') and not CmdLineParamExists('/VERYSILENT') then
     begin
-      DelTree(DataPath, True, True, True);
+      if MsgBox(MsgText, mbConfirmation, MB_YESNO) = IDNO then
+      begin
+        DelTree(DataPath, True, True, True);
+      end;
     end;
 
   end;

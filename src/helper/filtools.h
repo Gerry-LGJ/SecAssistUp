@@ -65,6 +65,9 @@ public:
 
     Q_INVOKABLE QString sha256(const QString &text);
 
+    Q_INVOKABLE QString sha256CalculateFile(const QString &filePath,
+                                            const std::function<void(qint64)> &progressCallback = nullptr);
+
     Q_INVOKABLE QString toBase64(const QString &text);
 
     Q_INVOKABLE QString fromBase64(const QString &text);

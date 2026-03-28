@@ -1,0 +1,3 @@
+- New automatic update function has been added.
+- Update the workflow.
+- Fix the issue where downloadHandle cannot be set for redirection.

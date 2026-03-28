@@ -55,6 +55,21 @@ add_custom_target(Script-Update-Translations
 )
 
 
+# ########## Copy the dynamic libraries required for the program to run ##########
+if (WIN32)
+    if (MSVC)
+        if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+            file(GLOB_RECURSE 3RDPARTY_DLL_DIR ${CMAKE_SOURCE_DIR}/3rdparty/msvc/x86/*.dll)
+        elseif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+            file(GLOB_RECURSE 3RDPARTY_DLL_DIR ${CMAKE_SOURCE_DIR}/3rdparty/msvc/x64/*.dll)
+        endif ()
+    elseif (MINGW)
+        file(GLOB_RECURSE 3RDPARTY_DLL_DIR ${CMAKE_SOURCE_DIR}/3rdparty/mingw/*.dll)
+    endif ()
+    file(COPY ${3RDPARTY_DLL_DIR} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif ()
+
+
 # ########## Configurate Directory ##########
 set(SRC_DIR src)
 set(RES_DIR res)

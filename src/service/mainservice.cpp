@@ -24,6 +24,7 @@ MainService::MainService(QObject *parent)
     mDownloadService    = DownloadService::getInstance();
     mUploadService      = UploadService::getInstance();
     mFileWatcherService = FileWatcherService::getInstance();
+    mUpdateService      = UpdateService::getInstance();
                           FilIconTools::getInstance();
 }
 
@@ -49,6 +50,8 @@ void MainService::init()
     mDownloadService->init();
     mUploadService->init();
     mFileWatcherService->init();
+    mUpdateService->init();
+
     initSystemTrayIcon();
     SettingsDialog::initRunAtSystemStartup();
     currentActiveWindowType = ACTIVE_WINDOW_TYPE_LOGIN;
@@ -61,6 +64,11 @@ void MainService::init()
     } else {
         requestShowActiveWindow(currentActiveWindowType);
     }
+
+    // Print SSL Support Status
+    qDebug() << "SSL Support Status:"                      << QSslSocket::supportsSsl();
+    qDebug() << "SSL version at the time of construction:" << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "Running SSL version:"                     << QSslSocket::sslLibraryVersionString();
 }
 
 void MainService::closeEvent(QWidget *widget, QCloseEvent *event)
@@ -162,7 +170,7 @@ int MainService::runOnceOnly()
 {
     QSharedMemory *shareMemory = new QSharedMemory(APPLICATION_GUID);
     if (shareMemory->attach()) {
-        QMessageBox::information(nullptr, QApplication::applicationName() + " - "  + tr("Friendly Reminder"),
+        QMessageBox::information(nullptr, tr("Friendly Reminder"),
                                  tr("Please do not launch again. The application is already running and can be restored from the system tray."));
         return -1;
     }

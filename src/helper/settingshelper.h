@@ -38,6 +38,8 @@
 #define APP_SYSTEM_NOTIFY       "APP/system_nofify"
 #define APP_CLOSE_MAIN_WINDOW   "APP/close_main_window"
 #define APP_START_MINI_TO_TRAY  "APP/start_minimized_to_tray"
+#define APP_UPDATE_MODE         "APP/update_mode"
+#define APP_LATEST_VERSION      "APP/latest_version"
 #define WINDOW_BLUR             "WINDOW/blur"
 #define WINDOW_OPACITY          "WINDOW/opacity"
 #define WINDOW_BLUR_RADIUS      "WINDOW/blur_radius"
@@ -297,7 +299,7 @@ public:
         setValue(APP_CLOSE_MAIN_WINDOW, mode);
     }
     Q_INVOKABLE QString getAppCloseMainWindow(const QString &def=QString("ask")) {
-        // "ask"   : Always ask on close.
+        // "ask"   : Always ask on close.(default)
         // "tray"  : Minimize to system tray, program continues running.
         // "exit"  : Exit the program.
         return value(APP_CLOSE_MAIN_WINDOW, def).toString();
@@ -310,6 +312,26 @@ public:
     }
     Q_INVOKABLE bool getAppStartMinimizedToTray(bool def = false) {
         return value(APP_START_MINI_TO_TRAY, def).toBool();
+    }
+
+
+    // APP_UPDATE_MODE
+    Q_INVOKABLE void saveAppUpdateMode(unsigned int mode) {
+        setValue(APP_UPDATE_MODE, mode);
+    }
+    Q_INVOKABLE unsigned int getAppUpdateMode(unsigned int def = 1) {
+        // 0    : auto update(default)
+        // 1    : notify
+        return value(APP_UPDATE_MODE, def).toUInt();
+    }
+
+
+    // APP_LATEST_VERSION
+    Q_INVOKABLE void saveAppLatestVersion(const QString &version) {
+        setValue(APP_LATEST_VERSION, version);
+    }
+    Q_INVOKABLE QString getAppLatestVersion(const QString &def="0.0.0") {
+        return value(APP_LATEST_VERSION, def).toString();
     }
 
 

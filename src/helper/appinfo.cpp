@@ -8,17 +8,16 @@
 AppInfo::AppInfo(QObject *parent)
     : QObject{parent}
 {
-    QString ver = QString(APPLICATION_VERSION);
-#ifdef QT_DEBUG
-    ver += " Debug";
-#else
-    ver += " Release";
-#endif
-    version(ver);
+    version(APPLICATION_VERSION);
 #if 1
     debugEnable(SettingsHelper::getInstance()->getDebugEnable());
 #else
     debugEnable(true);
+#endif
+#ifdef QT_DEBUG
+    buildType("Debug");
+#else
+    buildType("Release");
 #endif
     buildDate(__DATE__);
     buildTime(__TIME__);

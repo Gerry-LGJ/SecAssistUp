@@ -15,6 +15,7 @@
 #include "downloadservice.h"
 #include "uploadservice.h"
 #include "filewatcherservice.h"
+#include "updateservice.h"
 
 class MSEvent;
 
@@ -69,6 +70,8 @@ private:
     UploadService       *mUploadService;
     // File Watcher Service
     FileWatcherService  *mFileWatcherService;
+    // Update Service
+    UpdateService       *mUpdateService;
     // System Tray Icon
     QSystemTrayIcon     *mSystemTrayIcon;
     // Window

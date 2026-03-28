@@ -9,7 +9,8 @@ class AppInfo : public QObject
 {
     Q_OBJECT
     Q_PROPERTY_AUTO(QString, version);
-    Q_PROPERTY_AUTO(bool, debugEnable)
+    Q_PROPERTY_AUTO(bool, debugEnable);
+    Q_PROPERTY_AUTO(QString, buildType);
     Q_PROPERTY_AUTO(QString, buildDate);
     Q_PROPERTY_AUTO(QString, buildTime);
     Q_PROPERTY_AUTO(QString, buildQtVersion);

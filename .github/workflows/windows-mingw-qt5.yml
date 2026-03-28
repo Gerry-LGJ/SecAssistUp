@@ -155,19 +155,22 @@ jobs:
             #     asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
             #     tag: ${{ github.ref }}
             #     overwrite: true
-            - name: Rename Upload Assets
-              if: startsWith(github.event.ref, 'refs/tags/')
-              shell: pwsh
-              run: |
-                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force -WhatIf
-                Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force
+            # - name: Rename Upload Assets
+            #   if: startsWith(github.event.ref, 'refs/tags/')
+            #   shell: pwsh
+            #   run: |
+            #     Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force -WhatIf
+            #     Rename-Item -Path ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe -NewName ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe -Force
 
             - name: Create Release and Upload Assets
               if: startsWith(github.event.ref, 'refs/tags/')
               uses: softprops/action-gh-release@v2
               with:
-                files: ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
+                files: |
+                  # ./package/${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}_setup.exe
+                  ./package/${{ env.fileName }}-${{ github.ref_name }}_setup.exe
                 name: ${{ github.ref_name }}
+                body_path: ./CHANGELOG.md
                 generate_release_notes: true
 
               

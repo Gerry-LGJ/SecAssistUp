@@ -22,9 +22,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     mFilTools            = FilTools::getInstance();
     mAppInfo             = AppInfo::getInstance();
     mNetwork             = Network::getInstance();
+    mUpdateService       = UpdateService::getInstance();
     mAgentTestCallable   = new NetworkCallable(this);
     mCMWButtonGroup      = new QButtonGroup(this);
     mLanguageButtonGroup = new QButtonGroup(this);
+    mUpdateButtonGroup   = new QButtonGroup(this);
     init();
 }
 
@@ -63,27 +65,35 @@ void SettingsDialog::init()
     connect(this->ui->checkBox_SystemTrayNotify,     &QCheckBox::stateChanged, this, &SettingsDialog::onSystemTrayNotifyStateChanged);
     connect(this->ui->checkBox_RunAtSystemStartup,   &QCheckBox::stateChanged, this, &SettingsDialog::onRunAtSystemStartupStateChanged);
     connect(this->ui->checkBox_StartMinimizedToTray, &QCheckBox::stateChanged, this, &SettingsDialog::onStartMinimizedToTrayStateChanged);
-    connect(this->ui->pushButton_TestCrash,     &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonTestCrash);
-    connect(this->ui->pushButton_Restart,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonRestart);
-    connect(this->ui->pushButton_SystemTray,    &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonSystemTray);
-    connect(this->ui->pushButton_Notification,  &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonNotification);
-    connect(this->ui->pushButton_OpenLogFolder, &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenLoggerFolder);
-    connect(this->ui->pushButton_OpenCfg,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenConfiguration);
+    connect(this->ui->pushButton_TestCrash,          &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonTestCrash);
+    connect(this->ui->pushButton_Restart,            &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonRestart);
+    connect(this->ui->pushButton_SystemTray,         &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonSystemTray);
+    connect(this->ui->pushButton_Notification,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonNotification);
+    connect(this->ui->pushButton_OpenLogFolder,      &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenLoggerFolder);
+    connect(this->ui->pushButton_OpenCfg,            &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonOpenConfiguration);
     connect(this->ui->spinBox_RefreshInterval,  QOverload<int>::of(&QSpinBox::valueChanged), this, &SettingsDialog::onValueChangedSpinBoxRefreshInterval);
     connect(this->ui->spinBox_DebounceDelay,    QOverload<int>::of(&QSpinBox::valueChanged), this, &SettingsDialog::onValueChangedSpinBox_DebounceDelay);
     connect(this->ui->pushButton_SelectDownloadLocation, &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonSelectDownloadLocation);
     connect(this->ui->comboBox_AgentMode,       QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsDialog::onCurrentIndexChangedComboBoxAgentMode);
-    connect(this->ui->pushButton_AgentTest,     &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentTest);
-    connect(this->ui->pushButton_AgentConfirm,  &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentConfirm);
+    connect(this->ui->pushButton_AgentTest,          &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentTest);
+    connect(this->ui->pushButton_AgentConfirm,       &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonAgentConfirm);
+    connect(this->ui->pushButton_CheckForUpdates,    &QPushButton::clicked, this, &SettingsDialog::onClickPushButtonCheckUpdate);
+
     // init Close Main Window Radio Button
     mCMWButtonGroup->addButton(this->ui->radioButton_cmw_ask);
     mCMWButtonGroup->addButton(this->ui->radioButton_cmw_tray);
     mCMWButtonGroup->addButton(this->ui->radioButton_cmw_exit);
     connect(mCMWButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonCloseMainWindow);
+
     // init Language Radio Button
     mLanguageButtonGroup->addButton(this->ui->radioButton_lang_en_US);
     mLanguageButtonGroup->addButton(this->ui->radioButton_lang_zh_CN);
     connect(mLanguageButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonLanguage);
+
+    // init Update Mode Radio Button
+    mUpdateButtonGroup->addButton(this->ui->radioButton_ud_auto);
+    mUpdateButtonGroup->addButton(this->ui->radioButton_ud_notify);
+    connect(mUpdateButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &SettingsDialog::onClickRadioButtonUpdate);
 
     // reload settings to UI
     reloadConfigurationsFromSettings();
@@ -106,11 +116,28 @@ void SettingsDialog::init()
     // other
     mAgentTesting = false;
 
+    // update service
+    this->ui->label_CheckForUpdatesMsg->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    connect(mUpdateService, &UpdateService::updateMsgChanged, this, [=] (QString msg) {
+
+        // When the text exceeds the preset length, use an ellipsis.
+        QFontMetrics fontMetrics(this->ui->label_CheckForUpdatesMsg->font());
+        QString elidedText = fontMetrics.elidedText(msg, Qt::ElideRight, this->ui->label_CheckForUpdatesMsg->width() - 10);
+
+        this->ui->label_CheckForUpdatesMsg->setText(elidedText);
+        this->ui->label_CheckForUpdatesMsg->setToolTip(msg);
+
+    });
+    this->ui->label_CheckForUpdatesMsg->setText(mUpdateService->getUpdateMsg());
+    connect(mUpdateService, &UpdateService::updateProgressChanged, this, &SettingsDialog::updateProgressChangedSlot);
+    updateProgressChangedSlot(mUpdateService->getUpdateProgress());
+
     // Common Page
     this->ui->lineEdit_Port->setValidator(new QIntValidator(0, 65535, this->ui->lineEdit_Port));
 
     // About Page
     this->ui->label_Version->setText(mAppInfo->version());
+    this->ui->label_BuildType->setText(mAppInfo->buildType());
     this->ui->label_QtVersion->setText(mAppInfo->buildQtVersion());
     this->ui->label_BuildTime->setText(QString("%1 %2").arg(mAppInfo->buildDate(), mAppInfo->buildTime()));
 }
@@ -385,6 +412,34 @@ void SettingsDialog::onClickPushButtonAgentConfirm()
     reloadAgentConfigurations();
 }
 
+void SettingsDialog::onClickRadioButtonUpdate(QAbstractButton *button)
+{
+    if (button == this->ui->radioButton_ud_auto) {
+        mSettingsHelper->saveAppUpdateMode(0);
+    } else if (button == this->ui->radioButton_ud_notify) {
+        mSettingsHelper->saveAppUpdateMode(1);
+    } else {
+        mSettingsHelper->saveAppUpdateMode(1);
+    }
+}
+
+void SettingsDialog::onClickPushButtonCheckUpdate()
+{
+    mUpdateService->checkForUpdate(false);
+}
+
+void SettingsDialog::updateProgressChangedSlot(int progress)
+{
+    QProgressBar *progressBar = this->ui->progressBar_UpdateDownload;
+
+    if (0 <= progress && progress <= 100) {
+        progressBar->setVisible(true);
+        progressBar->setValue(progress);
+    } else {
+        progressBar->setVisible(false);
+    }
+}
+
 bool SettingsDialog::event(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
@@ -478,6 +533,17 @@ void SettingsDialog::reloadConfigurationsFromSettings()
             this->ui->radioButton_lang_zh_CN->setChecked(true);
         } else {
             this->ui->radioButton_lang_en_US->setChecked(true);
+        }
+    }
+    {
+        unsigned int mode = mSettingsHelper->getAppUpdateMode();
+        const QSignalBlocker blocker(this->mUpdateButtonGroup);
+        if (mode == 0) {
+            this->ui->radioButton_ud_auto->setChecked(true);
+        } else if (mode == 1) {
+            this->ui->radioButton_ud_notify->setChecked(true);
+        } else {
+            this->ui->radioButton_ud_auto->setChecked(true);
         }
     }
 

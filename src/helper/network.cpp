@@ -364,6 +364,7 @@ void Network::handleDownload(NetworkParams *params, NetworkCallable *c) {
         addQueryParam(&url, params->_queryMap);
         QNetworkRequest request(url);
         addHeaders(&request, params->_headerMap);
+        addAttributes(&request, params->_attributesMap);
         QString cachePath = getCacheFilePath(cacheKey);
         QString destPath = params->_downloadParam->_destPath;
         auto *destFile = new QFile(destPath);

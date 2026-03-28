@@ -10,6 +10,7 @@
 #include "../helper/appinfo.h"
 #include "../helper/filtools.h"
 #include "../helper/network.h"
+#include "../service/updateservice.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -56,6 +57,10 @@ private slots:
     void onCurrentIndexChangedComboBoxAgentMode(int index);
     void onClickPushButtonAgentTest();
     void onClickPushButtonAgentConfirm();
+    // About Page
+    void onClickRadioButtonUpdate(QAbstractButton *button);
+    void onClickPushButtonCheckUpdate();
+    void updateProgressChangedSlot(int progress);
 
 protected:
     bool event(QEvent *e) override;
@@ -70,6 +75,8 @@ private:
     NetworkCallable    *mAgentTestCallable;
     QButtonGroup       *mCMWButtonGroup;
     QButtonGroup       *mLanguageButtonGroup;
+    QButtonGroup       *mUpdateButtonGroup;
+    UpdateService      *mUpdateService;
 
     void init();
     void reloadConfigurationsFromSettings();

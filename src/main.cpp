@@ -1,9 +1,12 @@
 ﻿#include <QApplication>
+#include <QEventLoop>
+#include <QTimer>
 
 #include "helper/settingshelper.h"
 #include "helper/log.h"
 #include "helper/translatehelper.h"
 #include "service/mainservice.h"
+#include "service/updateservice.h"
 #include "version.h"
 #include "window/mainwindow.h"
 #include "window/loginwindow.h"
@@ -19,7 +22,8 @@ int main(int argc, char *argv[])
 #endif
 
     QApplication app(argc, argv);
-    const char *uri = "SecAssistUp";
+    QStringList arguments = app.arguments();
+    const char *uri       = "SecAssistUp";
 
 #ifdef WIN32
     ::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)MyUnhandledExceptionFilter);
@@ -40,6 +44,14 @@ int main(int argc, char *argv[])
 
     SettingsHelper::getInstance()->init(argv);
     TranslateHelper::getInstance()->init();
+
+    // When launching the application in the update mode, we need to wait for a moment
+    // to ensure that the previous application has enough time to completely exit.
+    if (arguments.size() >= 2 && arguments.at(1).startsWith("-update")) {
+        QEventLoop loop;
+        QTimer::singleShot(200, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
 
     // once only
     if (MainService::runOnceOnly() != 0) {
@@ -67,13 +79,30 @@ int main(int argc, char *argv[])
     w.show();
 #endif
 
+    // check for update
+    if (UpdateService::checkForAutoUpdate()) {
+        return 932;
+    }
+    if (arguments.size() >= 2 && arguments.at(1).startsWith("-update")) {
+        if (UpdateService::checkForAutoUpdate(true)) {
+            return 932;
+        }
+    }
+
     // Start Main Service
     MainService::getInstance()->init();
 
     // return app.exec();
     const int exec = QApplication::exec();
+
+    qDebug() << __func__ << "exec exit with code" << exec << ".";
+
     if (exec == 931) {
         QProcess::startDetached(qApp->applicationFilePath(), qApp->arguments());
+    } else if (exec == 932) {
+        QStringList arg;
+        arg << "-update";
+        QProcess::startDetached(qApp->applicationFilePath(), arg);
     }
     return exec;
 }
