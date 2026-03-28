@@ -752,53 +752,53 @@
 <context>
     <name>UpdateService</name>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="89"/>
+        <location filename="../../src/service/updateservice.cpp" line="88"/>
         <source>Developer</source>
         <translation>开发者</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="90"/>
+        <location filename="../../src/service/updateservice.cpp" line="89"/>
         <source>Have you found the new version installation package? Should we proceed with the update?</source>
         <translation>发现新版本安装包，继续安装？</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="148"/>
+        <location filename="../../src/service/updateservice.cpp" line="147"/>
         <source>Downloading ......</source>
         <translation>正在下载 ......</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="298"/>
+        <location filename="../../src/service/updateservice.cpp" line="297"/>
         <source>New version %1 found.</source>
         <translation>发现新版本 %1。</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="320"/>
+        <location filename="../../src/service/updateservice.cpp" line="319"/>
         <source>Please obtain the updated information on the relevant page.</source>
         <translation>请前往关于页面获取更新信息。</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="333"/>
-        <location filename="../../src/service/updateservice.cpp" line="402"/>
+        <location filename="../../src/service/updateservice.cpp" line="332"/>
+        <location filename="../../src/service/updateservice.cpp" line="401"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="351"/>
+        <location filename="../../src/service/updateservice.cpp" line="350"/>
         <source>The latest version is lower than the current version.</source>
         <translation>最新版本低于当前版本。</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="355"/>
+        <location filename="../../src/service/updateservice.cpp" line="354"/>
         <source>The current version is already up to date.</source>
         <translation>当前已是最新版本。</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="389"/>
+        <location filename="../../src/service/updateservice.cpp" line="388"/>
         <source>%1 The installer has been downloaded successfully.</source>
         <translation>%1 安装包下载完成。</translation>
     </message>
     <message>
-        <location filename="../../src/service/updateservice.cpp" line="396"/>
+        <location filename="../../src/service/updateservice.cpp" line="395"/>
         <source>Version %1 has been downloaded. 
 Do you want to proceed with the update?</source>
         <translation>%1 版本下载完成，继续更新？</translation>

@@ -10,7 +10,6 @@
 
 #include "mainservice.h"
 
-static bool mDebug = false;
 
 UpdateService::UpdateService(QObject *parent)
     : QObject{parent}
@@ -26,7 +25,7 @@ UpdateService::UpdateService(QObject *parent)
 
 void UpdateService::init()
 {
-    mCurrentVersion    = mDebug ? Version(0, 4, 2) : Version(mAppInfo->version());
+    mCurrentVersion    = Version(mAppInfo->version());
     mState             = idle_s;
     mUserAgent         = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                          "Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0";
@@ -62,7 +61,7 @@ bool UpdateService::checkForAutoUpdate(bool isManual)
 {
     SettingsHelper *mSettings  = SettingsHelper::getInstance();
     AppInfo *mAppInfo          = AppInfo::getInstance();
-    Version currentVer         = mDebug ? Version(0, 4, 2) : Version(mAppInfo->version());
+    Version currentVer         = Version(mAppInfo->version());
     QString latestVerStr       = mSettings->getAppLatestVersion(currentVer.toString());
     Version cacheLatestVer     = Version(latestVerStr);
     int udmode                 = mSettings->getAppUpdateMode();
@@ -288,7 +287,7 @@ void UpdateService::onGetLatestInfoSuccess(QString &rsp)
     qDebug() << __func__ << "CurrentVersion:" << mCurrentVersion.toString() <<
         "LatestVersion:" << latestVersion.toString();
 
-    if (mCurrentVersion < latestVersion || (mDebug && mCurrentVersion == latestVersion)) {
+    if (mCurrentVersion < latestVersion) {
 
         mLatestVersion   = latestVersion;
         mDownloadFile    = getInstallerFileByVersion(mLatestVersion);
