@@ -10,7 +10,7 @@
 
 #include "mainservice.h"
 
-static bool mDebug = true;
+static bool mDebug = false;
 
 UpdateService::UpdateService(QObject *parent)
     : QObject{parent}
@@ -82,7 +82,7 @@ bool UpdateService::checkForAutoUpdate(bool isManual)
                 return false;
             }
 
-#if 1
+#if 0
             // if (mAppInfo->debugEnable()) {
                 QMessageBox::StandardButton reply = QMessageBox::question(
                     QApplication::activeWindow(),
