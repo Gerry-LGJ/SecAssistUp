@@ -1,3 +1,4 @@
-- New automatic update function has been added.
-- Update the workflow.
-- Fix the issue where downloadHandle cannot be set for redirection.
+- Added the function for viewing operation records.
+- Limit the length of the project name to 64 characters.
+- Modify the logic of the drawing table view.
+- Correct the issues where some parts of the text were not translated properly.

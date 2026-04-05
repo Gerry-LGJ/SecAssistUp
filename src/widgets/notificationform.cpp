@@ -19,7 +19,7 @@ NotificationForm::NotificationForm(QWidget *parent) :
 {
     ui->setupUi(this);
     closeBtn = this->ui->pushButton_Close;
-    mFiles   = this->ui->listWidget_Files;
+    mLWFiles = this->ui->listWidget_Files;
 
     setWindowFlags(windowFlags() |
                    Qt::FramelessWindowHint |
@@ -63,16 +63,16 @@ NotificationForm::NotificationForm(QWidget *parent) :
     }
 }
 
-NotificationForm::NotificationForm(const QString &title, const QStringList &list, int displayTime, QWidget *parent) :
+NotificationForm::NotificationForm(const QString &title, const QFileInfoList &list, int displayTime, QWidget *parent) :
     mTitle(title),
-    mStringList(list),
+    mFileInfos(list),
     mDisplayTime(displayTime),
     QWidget(parent),
     ui(new Ui::NotificationForm)
 {
     ui->setupUi(this);
     closeBtn =  this->ui->pushButton_Close;
-    mFiles   = this->ui->listWidget_Files;
+    mLWFiles = this->ui->listWidget_Files;
 
     // set window flags
     setWindowFlags(windowFlags() |
@@ -125,9 +125,9 @@ void NotificationForm::setTitle(const QString &title)
     mTitle = title;
 }
 
-void NotificationForm::setStringList(const QStringList &list)
+void NotificationForm::setStringList(const QFileInfoList &list)
 {
-    mStringList = list;
+    mFileInfos = list;
 }
 
 void NotificationForm::setDisplayTime(int msec)
@@ -188,8 +188,12 @@ void NotificationForm::showAtScreenCorner()
     }
 
     // add list data
-    mFiles->clear();
-    mFiles->addItems(mStringList);
+    QStringList mStringList;
+    mLWFiles->clear();
+    for (int i = 0; i < mFileInfos.size(); ++i) {
+        mStringList.append(mFileInfos.at(i).fileName());
+    }
+    mLWFiles->addItems(mStringList);
 
     // Obtain the position at the bottom right corner of the screen.
     QScreen *screen      = QGuiApplication::primaryScreen();

@@ -25,6 +25,7 @@ MainService::MainService(QObject *parent)
     mUploadService      = UploadService::getInstance();
     mFileWatcherService = FileWatcherService::getInstance();
     mUpdateService      = UpdateService::getInstance();
+    mRecorderService    = RecorderService::getInstance();
                           FilIconTools::getInstance();
 }
 
@@ -51,6 +52,7 @@ void MainService::init()
     mUploadService->init();
     mFileWatcherService->init();
     mUpdateService->init();
+    mRecorderService->init();
 
     initSystemTrayIcon();
     SettingsDialog::initRunAtSystemStartup();
@@ -219,6 +221,7 @@ void MainService::initSystemTrayIcon()
 
     // Create menu item
     QAction *settingsAction = new QAction("Settings");
+    QAction *recorderAction = new QAction("Operating Record");
     QAction *showAction     = new QAction("Display window");
     QAction *quitAction     = new QAction("Quit");
 #ifdef QT_DEBUG
@@ -231,6 +234,7 @@ void MainService::initSystemTrayIcon()
     menu->addSeparator();
 #endif
     menu->addAction(showAction);
+    menu->addAction(recorderAction);
     menu->addAction(settingsAction);
     menu->addSeparator();
     menu->addAction(quitAction);
@@ -242,6 +246,16 @@ void MainService::initSystemTrayIcon()
     connect(showAction, &QAction::triggered, this, [=] {
         uint16_t type = currentActiveWindowType;
         requestShowActiveWindow(type);
+    });
+    connect(recorderAction, &QAction::triggered, this, [=] {
+        uint16_t type = currentActiveWindowType;
+        requestShowActiveWindow(type);
+        if (type == ACTIVE_WINDOW_TYPE_LOGIN) {
+            QMessageBox::information(mLoginWindow, tr("Friendly Reminder"), tr("Please log in first before viewing."));
+        } else if (type == ACTIVE_WINDOW_TYPE_MAIN) {
+            RecorderDialog recorder(mMainWindow);
+            recorder.exec();
+        }
     });
     connect(settingsAction, &QAction::triggered, this, [=] {
         uint16_t type = currentActiveWindowType;

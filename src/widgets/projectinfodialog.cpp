@@ -115,7 +115,7 @@ void ProjectInfoDialog::initPushButton()
 project_info_t ProjectInfoDialog::getInfoFromUI()
 {
     project_info_t info;
-    info.name = this->ui->lineEdit_Name->text();
+    info.name = this->ui->lineEdit_Name->text().left(64);
     info.wdir = this->ui->lineEdit_Wdir->text();
     info.dspath = this->ui->lineEdit_dspath->text();
     info.rds    = this->ui->checkBox_rds->isChecked();

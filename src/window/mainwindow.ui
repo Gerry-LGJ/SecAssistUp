@@ -138,11 +138,33 @@
           <item>
            <widget class="QLabel" name="label_Countdown">
             <property name="text">
-             <string/>
+             <string notr="true"/>
             </property>
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_Recorder">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Operating Record</string>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
         </widget>
        </item>
        <item>
@@ -437,6 +459,9 @@
               </property>
               <item>
                <widget class="QTableWidget" name="tableWidget_Project">
+                <property name="editTriggers">
+                 <set>QAbstractItemView::NoEditTriggers</set>
+                </property>
                 <property name="selectionMode">
                  <enum>QAbstractItemView::SingleSelection</enum>
                 </property>

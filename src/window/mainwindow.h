@@ -44,6 +44,7 @@ public:
 protected:
     bool event(QEvent *e) override ;
     void closeEvent(QCloseEvent *event) override ;
+    void changeEvent(QEvent *event) override ;
 
 private:
     Ui::MainWindow *ui;
@@ -86,10 +87,12 @@ private:
     void updateTableWidgetDataFromProjectsInfo();
     void updateListWidgetDataFromUploadFilesInfo();
     bool updateWebFilesToUI();
+    void retranslate();
     void setSelectProjectName(QString text);
     void setSelectDownloadMode(int index);
     // Notification Bubble
     void notifyBubble(const QString &title, const QStringList &files);
+    void pushRecorder(const QStringList &files, bool isDownlaod);
 
     bool mSEventHandler(MSEvent *e);
 };

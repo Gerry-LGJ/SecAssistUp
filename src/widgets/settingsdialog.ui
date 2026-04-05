@@ -359,7 +359,7 @@
               </size>
              </property>
              <property name="title">
-              <string>File Watcher Debounce Delay</string>
+              <string>File Watcher Debounce Delay (Unit: millisecond)</string>
              </property>
              <widget class="QSpinBox" name="spinBox_DebounceDelay">
               <property name="geometry">

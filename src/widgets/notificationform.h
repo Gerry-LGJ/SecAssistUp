@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QDialog>
 #include <QListWidget>
+#include <QFileInfo>
 
 namespace Ui {
 class NotificationForm;
@@ -19,11 +20,11 @@ class NotificationForm : public QWidget
 
 public:
     explicit NotificationForm(QWidget *parent = nullptr);
-    explicit NotificationForm(const QString &title, const QStringList &list,int displayTime = 3000, QWidget *parent = nullptr);
+    NotificationForm(const QString &title, const QFileInfoList &list,int displayTime = 3000, QWidget *parent = nullptr);
     ~NotificationForm();
 
     void setTitle(const QString &title);
-    void setStringList(const QStringList &list);
+    void setStringList(const QFileInfoList &list);
     void setDisplayTime(int msec);
     void showAtScreenCornerr();
     void showAtScreenCorner();
@@ -44,9 +45,9 @@ private:
     QPropertyAnimation   *mAnimation;
     QPropertyAnimation   *mFadeOut;
     QPushButton          *closeBtn;
-    QListWidget          *mFiles;
+    QListWidget          *mLWFiles;
     QString               mTitle;
-    QStringList           mStringList;
+    QFileInfoList         mFileInfos;
     bool                  mIsHovered;
 };
 

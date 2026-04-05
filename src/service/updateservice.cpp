@@ -275,7 +275,6 @@ void UpdateService::onGetLatestInfoSuccess(QString &rsp)
 
     QString tagname        = getLatestValueFromRsp(rsp, tag_name_n);
     QString body           ;
-    QString downloadurl    ;
     Version latestVersion  = Version(tagname);
 
     if (latestVersion.isValid()) {

@@ -8,7 +8,6 @@
 #include <QMessageBox>
 
 #include "../service/mainservice.h"
-#include "../window/mainwindow.h"
 #include "../widgets/notificationform.h"
 #include "../widgets/notificationbubble.h"
 #include "../helper/translatehelper.h"
@@ -208,9 +207,15 @@ void SettingsDialog::onClickPushButtonNotification()
     form->showAtScreenCorner();
 #else
     static int count = 0;
-    QStringList files;
-    files << "test 1" << "test 2" << "test 3";
-    NotificationForm *form = new NotificationForm(QString(tr("Test Notification Bubble %1")).arg(++count), files);
+    QFileInfoList infos;
+    for (int i = 0; i < 3; ++i) {
+#ifdef Q_OS_WIN
+        infos.append(QFileInfo(QString("C:/a/b/test %1").arg(i + 1)));
+#else
+        infos.append(QFileInfo(QString("/a/b/test %1").arg(i + 1)));
+#endif
+    }
+    NotificationForm *form = new NotificationForm(QString(tr("Test Notification Bubble %1")).arg(++count), infos);
     form->showAtScreenCorner();
 #endif
     qDebug() << __func__ << "Return.";

@@ -9,6 +9,7 @@
 #include "../window/loginwindow.h"
 #include "../window/mainwindow.h"
 #include "../widgets/settingsdialog.h"
+#include "../widgets/recorderdialog.h"
 #include "../widgets/projectinfodialog.h"
 #include "loginservice.h"
 #include "refreshservice.h"
@@ -16,6 +17,7 @@
 #include "uploadservice.h"
 #include "filewatcherservice.h"
 #include "updateservice.h"
+#include "recorderservice.h"
 
 class MSEvent;
 
@@ -72,6 +74,8 @@ private:
     FileWatcherService  *mFileWatcherService;
     // Update Service
     UpdateService       *mUpdateService;
+    // Recorder Service
+    RecorderService     *mRecorderService;
     // System Tray Icon
     QSystemTrayIcon     *mSystemTrayIcon;
     // Window

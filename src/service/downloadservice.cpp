@@ -82,15 +82,18 @@ void DownloadService::initDownloadReqCallable()
                 qint64 takeTime = mTakeTimer.elapsed();
                 qDebug() << "Download Succeed" << takeTime / 1000 << "s. md5:" << mFilTools->md5CalculateFile(result);
                 win->setProgressBarDownload(0, "");
+                mOkFiles.append(mActiveFile);
                 // run script
                 runDownloadScript();
                 QVariantMap map;
                 map["resultCode"] = MSEvent::RESULT_CODE_SUCCESS;
+                map["okFiles"]    = mOkFiles;
                 sendMsgToObject(mDownloadReqSender, MSEvent::EVENT_TYPE_DOWNLOAD_CFM, map);
                 // reset state
                 mDownloading = false;
                 transition(STATE_TYPE_IDLE);
             } else {
+                mOkFiles.append(mActiveFile);
                 downloadNext();
                 return ;
             }
@@ -106,13 +109,14 @@ void DownloadService::initDownloadReqCallable()
     });
     connect(mDownloadReqCallable, &NetworkCallable::downloadProgress, this, [=] (qint64 recv, qint64 total) {
         int progress = (double)((double)recv / (double)total) * 100;
-        win->setProgressBarDownload(progress, mActiveFile);
+        win->setProgressBarDownload(progress, QFileInfo(mActiveFile).fileName());
     });
 }
 
 void DownloadService::download()
 {
     mTakeTimer.start();
+    mOkFiles.clear();
     downloadNext();
 }
 
@@ -141,7 +145,7 @@ void DownloadService::downloadNext()
         return ;
     }
 
-    mActiveFile = name;
+    mActiveFile = path;
 
     mNetwork->get(url)
     ->addHeader("User-Agent", mUserAgent)

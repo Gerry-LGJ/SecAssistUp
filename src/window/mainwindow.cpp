@@ -13,9 +13,11 @@
 #include "../common/filedata_t.h"
 #include "../service/refreshservice.h"
 #include "../service/mainservice.h"
+#include "../service/recorderservice.h"
 #include "../widgets/settingsdialog.h"
 #include "../widgets/projectinfodialog.h"
 #include "../widgets/notificationform.h"
+#include "../widgets/recorderdialog.h"
 #include "../helper/filicontools.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -68,16 +70,27 @@ void MainWindow::initPushButton()
 {
     qDebug() << __func__;
     MainService *mMainService = MainService::getInstance();
+
     // Refresh Button
     connect(this->ui->pushButton_Refresh, &QPushButton::clicked, this, [=] {
         MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_REFRESH_REQ);
         QCoreApplication::postEvent(mMainService, event);
     });
+
     // Return Button
     connect(this->ui->pushButton_Return, &QPushButton::clicked, this, [=] {
         MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_RETURN_PARENT_DIR_REQ);
         QCoreApplication::postEvent(mMainService, event);
     });
+
+    // Recorder Button
+    connect(this->ui->pushButton_Recorder, &QPushButton::clicked, this, [=] {
+        RecorderDialog recorder(this);
+        recorder.exec();
+    });
+    this->ui->pushButton_Recorder->setFont(FilIconTools::font());
+    this->ui->pushButton_Recorder->setText(FilIconTools::convert(FilIcons::Type::History));
+
     // Settings Button
     connect(this->ui->pushButton_Settings, &QPushButton::clicked, this, [=] {
         SettingsDialog settings(this);
@@ -85,6 +98,7 @@ void MainWindow::initPushButton()
     });
     this->ui->pushButton_Settings->setFont(FilIconTools::font());
     this->ui->pushButton_Settings->setText(FilIconTools::convert(FilIcons::Type::Settings));
+
     // Logout Button
     connect(this->ui->pushButton_Logout, &QPushButton::clicked, this, [=] {
         FileWatcherService *mFWService  = FileWatcherService::getInstance();
@@ -97,19 +111,23 @@ void MainWindow::initPushButton()
         event->setData(map);
         QCoreApplication::postEvent(mMainService, event);
     });
+
     // Select Mode ComBoBox
     connect(this->ui->comboBox_SelectMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=] (int index) {
         setSelectDownloadMode(index);
     });
+
     // Add Project Button
     connect(this->ui->pushButton_AddProject, &QPushButton::clicked, this, [=] {
         ProjectInfoDialog *mProjectInfoDialog = ProjectInfoDialog::getInstance();
         QString inputRet = QInputDialog::getText(this, tr("New Project"), tr("Please input the project name:"));
+
         if (inputRet.length() <= 0) {
             qDebug() << "Cancel Add Project";
+
         } else {
             QString dateTimeStr = mFilTools->getCurrentDateTimeToString("yyyyMMddHHmmsszzz");
-            if (mProjectDbHelper->add(dateTimeStr, inputRet, "", "", false, "", false, false, "")) {
+            if (mProjectDbHelper->add(dateTimeStr, inputRet.left(64), "", "", false, "", false, false, "")) {
                 qDebug() << "Add New Project Succeed. pid:" << dateTimeStr;
                 // updateProjectInfoToUI();
                 mProjectInfoDialog->openWithPid(dateTimeStr);
@@ -119,6 +137,7 @@ void MainWindow::initPushButton()
             }
         }
     });
+
     // Remove Project Button
     connect(this->ui->pushButton_RemoveProject, &QPushButton::clicked, this, [=] {
         int index = mTableWidgetProjects->currentRow();
@@ -148,6 +167,7 @@ void MainWindow::initPushButton()
         qDebug() << "on Override Radio Button State Changed:" << checked;
         mSettingsHelper->saveAppDownloadOverride(checked);
     });
+
     // Add File Button
     connect(this->ui->pushButton_AddFile, &QPushButton::clicked, this, [=] {
         QStringList files = QFileDialog::getOpenFileNames(this, tr("Open Files"));
@@ -175,6 +195,7 @@ void MainWindow::initPushButton()
         // update UI data
         updateUploadFilesInfoToUI();
     });
+
     // Remove File Button
     connect(this->ui->pushButton_RemoveFile, &QPushButton::clicked, this, [=] {
         qDebug() << "Remove UploadFiles";
@@ -200,6 +221,7 @@ void MainWindow::initPushButton()
             qDebug() << "Not Select items";
         }
     });
+
     // Enable File System Watcher Radio Button
     connect(this->ui->radioButton_EnableFsw, &QRadioButton::clicked, this, [=] (bool checked) {
         ProjectDbHelper    *helper     = mProjectDbHelper;
@@ -235,6 +257,7 @@ void MainWindow::initPushButton()
     /* Buttom Bar */
     // Downlaod Button
     connect(this->ui->pushButton_Download, &QPushButton::clicked, this, &MainWindow::onClickPushButtonDownload);
+
     // Upload_l Button
     connect(this->ui->pushButton_Upload_l, &QPushButton::clicked, this, [=] {
         qDebug() << "onClick Upload_l Button";
@@ -256,6 +279,7 @@ void MainWindow::initPushButton()
             qDebug() << "pushButton_Upload_l User Cancel Select Files";
         }
     });
+
     // Upload_r Button
     connect(this->ui->pushButton_Upload_r, &QPushButton::clicked, this, &MainWindow::onClickPushButtonUpload_r);
 }
@@ -584,29 +608,42 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
             "rus:" << info.rus;
     }
     QTableWidget *twps = mTableWidgetProjects;
+
     // 清理表格数据
     twps->clear();
+
     // 设置表头
     QStringList headers;
-    headers << "name" << "WorkDir" << "RDS" << "RUS" << "Options";
+    headers << tr("Name") << tr("Work Dir") << tr("RDS") << tr("RUS") << tr("Options");
     mTableWidgetProjects->setHorizontalHeaderLabels(headers);
     twps->setRowCount(list.size());
+    QHeaderView *horizontalHeader = twps->horizontalHeader();
+    horizontalHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+
+    // 渲染数据
     for (int i = 0; i < list.size(); ++i) {
         project_info_t info = list.at(i);
         if (mRestoreProjectsSelectPid == info.pid) restoreSelectRow = i;
+
         twps->setItem(i, 0, new QTableWidgetItem(info.name));
-        twps->setItem(i, 1, new QTableWidgetItem(info.wdir));
+
+        QTableWidgetItem *wdir = new QTableWidgetItem(info.wdir);
+        wdir->setToolTip(info.wdir);
+        twps->setItem(i, 1, wdir);
+
         QTableWidgetItem *rds = new QTableWidgetItem();
         rds->setCheckState(info.rds ? Qt::Checked : Qt::Unchecked);
         rds->setFlags(rds->flags() & ~Qt::ItemIsEditable);
         rds->setFlags(rds->flags() | Qt::ItemIsUserCheckable);
         twps->setItem(i, 2, rds);
+
         QTableWidgetItem *rus = new QTableWidgetItem();
         rus->setCheckState(info.rus ? Qt::Checked : Qt::Unchecked);
         rus->setFlags(rus->flags() & ~Qt::ItemIsEditable);
         rus->setFlags(rus->flags() | Qt::ItemIsUserCheckable);
         twps->setItem(i, 3, rus);
-        QPushButton *btn = new QPushButton("Options");
+
+        QPushButton *btn = new QPushButton(tr("Options"));
         btn->setProperty("row", i);
         connect(btn, &QPushButton::clicked, this, [=] {
             int row = btn->property("row").toInt();
@@ -700,6 +737,11 @@ bool MainWindow::updateWebFilesToUI()
     return true;
 }
 
+void MainWindow::retranslate()
+{
+    updateTableWidgetDataFromProjectsInfo();
+}
+
 void MainWindow::setSelectProjectName(QString text)
 {
     this->ui->label_SelectProjectName->setText(tr("Selected: ") + text);
@@ -739,12 +781,18 @@ void MainWindow::notifyBubble(const QString &title, const QStringList &files)
         return ;
     }
 
-    QStringList names;
+    QFileInfoList fileinfos;
     for (int i = 0; i < files.length(); ++i) {
-        names.append(QFileInfo(files.at(i)).fileName());
+        fileinfos.append(QFileInfo(files.at(i)));
     }
-    NotificationForm *form = new NotificationForm(title, names);
+    NotificationForm *form = new NotificationForm(title, fileinfos);
     form->showAtScreenCorner();
+}
+
+void MainWindow::pushRecorder(const QStringList &files, bool isDownlaod)
+{
+    RecorderService *mRecorder = RecorderService::getInstance();
+    mRecorder->push(files, isDownlaod);
 }
 
 bool MainWindow::updateProjectInfoToUI()
@@ -890,6 +938,11 @@ bool MainWindow::mSEventHandler(MSEvent *e)
         uint16_t resultCode = map["resultCode"].toUInt();
         qDebug() << "resultCode:" << resultCode;
         if (resultCode == MSEvent::RESULT_CODE_SUCCESS) {
+            QStringList okFiles    = map["okFiles"].toStringList();
+            // int count              = okFiles.length();
+            // QString title          = QString(tr("%1 file(s) downloaded")).arg(count);
+
+            pushRecorder(okFiles, true);
             qDebug() << "Download Succeed.";
 
         } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
@@ -920,6 +973,8 @@ bool MainWindow::mSEventHandler(MSEvent *e)
             QStringList okFiles    = map["okFiles"].toStringList();
             int count              = okFiles.length();
             QString title          = QString(tr("%1 file(s) uploaded")).arg(count);
+
+            pushRecorder(okFiles, false);
             notifyBubble(title, okFiles);
             qDebug() << "Upload Succeed.";
             // After uploading, you need to refresh the file list.
@@ -1000,4 +1055,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     // If the minimize-to-tray function is enabled, the window will be hidden instead of being closed.
     MainService::getInstance()->closeEvent(this, event);
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        retranslate();
+    }
+    QMainWindow::changeEvent(event);
 }

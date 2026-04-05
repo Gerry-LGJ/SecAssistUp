@@ -40,7 +40,7 @@ private:
     QStringList      mFiles, mOkFiles;
     QString          mDir;
     QString          mWebDir;
-    QString          mActiveFile;
+    QString          mActiveFile; // full path
     QString          mScript;
     QElapsedTimer    mTakeTimer;
     // Chunk Uploader
