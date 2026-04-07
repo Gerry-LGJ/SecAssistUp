@@ -23,6 +23,7 @@ MainService::MainService(QObject *parent)
     mRefreshService     = RefreshService::getInstance();
     mDownloadService    = DownloadService::getInstance();
     mUploadService      = UploadService::getInstance();
+    mOtherService       = OtherService::getInstance();
     mFileWatcherService = FileWatcherService::getInstance();
     mUpdateService      = UpdateService::getInstance();
     mRecorderService    = RecorderService::getInstance();
@@ -50,6 +51,7 @@ void MainService::init()
     mRefreshService->init();
     mDownloadService->init();
     mUploadService->init();
+    mOtherService->init();
     mFileWatcherService->init();
     mUpdateService->init();
     mRecorderService->init();

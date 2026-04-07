@@ -18,6 +18,7 @@
 #include "filewatcherservice.h"
 #include "updateservice.h"
 #include "recorderservice.h"
+#include "otherservice.h"
 
 class MSEvent;
 
@@ -70,6 +71,8 @@ private:
     DownloadService     *mDownloadService;
     // Upload Service
     UploadService       *mUploadService;
+    // Other Service
+    OtherService        *mOtherService;
     // File Watcher Service
     FileWatcherService  *mFileWatcherService;
     // Update Service

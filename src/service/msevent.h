@@ -18,7 +18,11 @@ public:
         EVENT_TYPE_ENTRY_FOLDER_REQ,
         EVENT_TYPE_RETURN_PARENT_DIR_REQ,
         EVENT_TYPE_DOWNLOAD_REQ,
-        EVENT_TYPE_UPLOAD_REQ
+        EVENT_TYPE_UPLOAD_REQ,
+        EVENT_TYPE_DELETE_REQ,
+        EVENT_TYPE_RENAME_REQ,
+        EVENT_TYPE_CUT_REQ,
+        EVENT_TYPE_PASTE_REQ
     };
     enum {
         EVENT_TYPE_BASE_CFM = 0x0200,
@@ -26,7 +30,11 @@ public:
         EVENT_TYPE_LOGOUT_CFM,
         EVENT_TYPE_REFRESH_CFM,
         EVENT_TYPE_DOWNLOAD_CFM,
-        EVENT_TYPE_UPLOAD_CFM
+        EVENT_TYPE_UPLOAD_CFM,
+        EVENT_TYPE_DELETE_CFM,
+        EVENT_TYPE_RENAME_CFM,
+        EVENT_TYPE_CUT_CFM,
+        EVENT_TYPE_PASTE_CFM
     };
     enum {
         EVENT_TYPE_BASE_IND = 0x0300,
@@ -38,6 +46,7 @@ public:
         RESULT_CODE_SUCCESS = 0x0000,
         RESULT_CODE_FAIL,
         RESULT_CODE_NETWORK_ONERROR,
+        RESULT_CODE_SESSION_INVALID
     };
     MSEvent(QObject *sender, uint16_t event)
         : QEvent(MSEVENT_BASE_TYPE), mSender(sender), mEventType(event) { }
@@ -54,6 +63,7 @@ public:
         return mSender;
     }
     void *getMsg() { return msg; }
+#if 0 // It may be removed in future versions.
     // LOGIN MESSAGE STRUCT
     typedef struct {
         char username[LOGIN_STR_MAX_LENGTH - 1];
@@ -86,6 +96,7 @@ public:
         event_type_upload_req_t event_type_upload_req;
         event_type_upload_cfm_t event_type_upload_cfm;
     } event_type_u;
+#endif
 
 private:
     uint16_t mEventType;

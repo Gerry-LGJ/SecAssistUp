@@ -9,6 +9,9 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
 
 #include "../common/filedata_t.h"
 #include "../service/refreshservice.h"
@@ -53,6 +56,7 @@ void MainWindow::init()
     initListWidgetUploadFiles();
     initProgressBar();
     initThumbnailToolBar();
+    updateProjectInfoToUI();
 
     int index     = mSettingsHelper->getAppDownloadMode();
     { // not send QComboBox::currentIndexChanged Signal
@@ -287,6 +291,8 @@ void MainWindow::initPushButton()
 void MainWindow::initListWidgetWebFiles()
 {
     qDebug() << __func__;
+    mListWidgetWebFiles->installEventFilter(this);
+
     connect(mListWidgetWebFiles, &QListWidget::itemDoubleClicked, this, [=] (QListWidgetItem *item) {
         int index                       = mListWidgetWebFiles->row(item);
         RefreshService *mRefreshService = RefreshService::getInstance();
@@ -302,7 +308,6 @@ void MainWindow::initListWidgetWebFiles()
             QCoreApplication::postEvent(MainService::getInstance(), event);
         }
     });
-    updateProjectInfoToUI();
 }
 
 void MainWindow::initTableWidgetProjects()
@@ -371,6 +376,8 @@ void MainWindow::initTableWidgetProjects()
 void MainWindow::initListWidgetUploadFiles()
 {
     qDebug() << __func__;
+    mListWidgetUploadFiles->installEventFilter(this);
+
     connect(mListWidgetUploadFiles, &QListWidget::itemChanged, this, [=] (QListWidgetItem *item) {
         FileWatcherService *mFWService = FileWatcherService::getInstance();
         UploadFileDbHelper *helper     = mUploadFileDbHelper;
@@ -1063,4 +1070,93 @@ void MainWindow::changeEvent(QEvent *event)
         retranslate();
     }
     QMainWindow::changeEvent(event);
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    MainService *mMainService = MainService::getInstance();
+
+    // 拖拽文件上传功能
+    if (watched == this->ui->listWidget_WebFiles) {
+        if (event->type() == QEvent::DragEnter) {
+            QDragEnterEvent *dragEvent = static_cast<QDragEnterEvent *>(event);
+            if (dragEvent->mimeData()->hasUrls()) {
+                dragEvent->acceptProposedAction();
+                return true;
+            }
+
+        } else if (event->type() == QEvent::Drop) {
+            QStringList files               ;
+            RefreshService *mRefreshService = RefreshService::getInstance();
+            QDropEvent *dropEvent           = static_cast<QDropEvent *>(event);
+            const QList<QUrl> urls          = dropEvent->mimeData()->urls();
+            project_info_t pinfo            = mActiveProjectInfo;
+            QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+
+            for (const QUrl &url : urls) {
+                if (url.isLocalFile()) {
+                    files.append(url.toLocalFile());
+                }
+            }
+
+            if (!files.isEmpty()) {
+                QVariantMap map;
+                MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_UPLOAD_REQ);
+                map["files"]   = files;
+                map["dir"]     = pinfo.wdir;
+                map["webdir"]  = webdir;
+                map["script"]  = "";
+                event->setData(QVariant(map));
+                QCoreApplication::postEvent(mMainService, event);
+            }
+
+            dropEvent->acceptProposedAction();
+            return true;
+
+        }
+
+    // 拖拽文件添加至Upload Files列表
+    } else if (watched == this->ui->listWidget_UploadFiles) {
+        if (event->type() == QEvent::DragEnter) {
+            QDragEnterEvent *dragEvent = static_cast<QDragEnterEvent *>(event);
+            if (dragEvent->mimeData()->hasUrls()) {
+                dragEvent->acceptProposedAction();
+                return true;
+            }
+
+        } else if (event->type() == QEvent::Drop) {
+            QStringList files;
+            QDropEvent *dropEvent = static_cast<QDropEvent *>(event);
+            const QList<QUrl> urls = dropEvent->mimeData()->urls();
+
+            for (const QUrl &url : urls) {
+                if (url.isLocalFile()) {
+                    files.append(url.toLocalFile());
+                }
+            }
+
+            if (!files.isEmpty() && !mActiveProjectInfo.pid.isEmpty()) {
+                // get every file info
+                int okcount = 0;
+                for (int i  = 0; i < files.size(); ++i) {
+                    QFileInfo fileInfo(files.at(i));
+                    uf_info_t info;
+                    info.fid    = mFilTools->getCurrentDateTimeToString("yyyyMMddHHmmsszzz") + QString("%1").arg(i);
+                    info.pid    = mActiveProjectInfo.pid;
+                    info.name   = fileInfo.fileName();
+                    info.dir    = fileInfo.path();
+                    info.enable = false;
+                    if (!mUploadFileDbHelper->add(info.fid, info.pid, info.name, info.dir, info.enable)) {
+                        qWarning() << "Add Upload Files Failure.";
+                    }
+                }
+
+                // update UI data
+                updateUploadFilesInfoToUI();
+            }
+        }
+
+    }
+
+    return QMainWindow::eventFilter(watched, event);
 }

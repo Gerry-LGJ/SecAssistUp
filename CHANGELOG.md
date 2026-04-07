@@ -1,4 +1,1 @@
-- Added the function for viewing operation records.
-- Limit the length of the project name to 64 characters.
-- Modify the logic of the drawing table view.
-- Correct the issues where some parts of the text were not translated properly.
+- Dragging the file into the list can directly upload or add it.

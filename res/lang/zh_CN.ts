@@ -68,57 +68,57 @@
 <context>
     <name>MainService</name>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="63"/>
-        <location filename="../../src/service/mainservice.cpp" line="140"/>
-        <location filename="../../src/service/mainservice.cpp" line="175"/>
-        <location filename="../../src/service/mainservice.cpp" line="254"/>
+        <location filename="../../src/service/mainservice.cpp" line="65"/>
+        <location filename="../../src/service/mainservice.cpp" line="142"/>
+        <location filename="../../src/service/mainservice.cpp" line="177"/>
+        <location filename="../../src/service/mainservice.cpp" line="256"/>
         <source>Friendly Reminder</source>
         <translation>友情提示</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="64"/>
-        <location filename="../../src/service/mainservice.cpp" line="141"/>
+        <location filename="../../src/service/mainservice.cpp" line="66"/>
+        <location filename="../../src/service/mainservice.cpp" line="143"/>
         <source>SecAssistUp is hidden from the tray, click on the tray to activate the window again.</source>
         <translation>SecAssistUp 在托盘中处于隐藏状态，单击托盘图标以再次激活窗口。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="92"/>
+        <location filename="../../src/service/mainservice.cpp" line="94"/>
         <source>Remember my choice.</source>
         <translation>记住我的选择。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="95"/>
-        <location filename="../../src/service/mainservice.cpp" line="104"/>
+        <location filename="../../src/service/mainservice.cpp" line="97"/>
+        <location filename="../../src/service/mainservice.cpp" line="106"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="96"/>
+        <location filename="../../src/service/mainservice.cpp" line="98"/>
         <source>Are you sure you want to exit the program ?</source>
         <translation>你确定要退出程序吗？</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="102"/>
+        <location filename="../../src/service/mainservice.cpp" line="104"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="103"/>
+        <location filename="../../src/service/mainservice.cpp" line="105"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="176"/>
+        <location filename="../../src/service/mainservice.cpp" line="178"/>
         <source>Please do not launch again. The application is already running and can be restored from the system tray.</source>
         <translation>请勿再次启动程序。该程序已经正在运行，您可以在系统托盘处再次恢复窗口。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="180"/>
+        <location filename="../../src/service/mainservice.cpp" line="182"/>
         <source>Critical</source>
         <translation>严重错误</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="254"/>
+        <location filename="../../src/service/mainservice.cpp" line="256"/>
         <source>Please log in first before viewing.</source>
         <translation>请先登录后查看。</translation>
     </message>
@@ -128,8 +128,8 @@
     <message>
         <location filename="../../src/window/mainwindow.ui" line="63"/>
         <location filename="../../src/window/mainwindow.ui" line="66"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="483"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="485"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="487"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="471"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="473"/>
         <source>Refresh</source>
@@ -137,27 +137,27 @@
     </message>
     <message>
         <location filename="../../src/window/mainwindow.ui" line="79"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="487"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="489"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="475"/>
         <source>Return Parent Directory</source>
         <translation>返回上级目录</translation>
     </message>
     <message>
         <location filename="../../src/window/mainwindow.ui" line="82"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="489"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="491"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="477"/>
         <source>Return</source>
         <translation>返回上级</translation>
     </message>
     <message>
         <location filename="../../src/window/mainwindow.ui" line="163"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="492"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="494"/>
         <source>Operating Record</source>
         <translation>操作记录</translation>
     </message>
     <message>
         <location filename="../../src/window/mainwindow.ui" line="185"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="495"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="497"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="481"/>
         <source>Settings</source>
         <translation>设置</translation>
@@ -165,222 +165,233 @@
     <message>
         <location filename="../../src/window/mainwindow.ui" line="201"/>
         <location filename="../../src/window/mainwindow.ui" line="204"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="498"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="500"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="502"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="484"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="486"/>
         <source>Logout</source>
         <translation>登出</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="341"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="501"/>
+        <location filename="../../src/window/mainwindow.ui" line="344"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="503"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="487"/>
         <source>Default Mode</source>
         <translation>默认模式</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="346"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="502"/>
+        <location filename="../../src/window/mainwindow.ui" line="349"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="504"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="488"/>
         <source>Project Mode</source>
         <translation>工程模式</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="360"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="505"/>
+        <location filename="../../src/window/mainwindow.ui" line="363"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="507"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="491"/>
         <source>Add a new project and working directory.</source>
         <translation>添加一个新工程和工作目录。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="363"/>
-        <location filename="../../src/window/mainwindow.ui" line="543"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="507"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="520"/>
+        <location filename="../../src/window/mainwindow.ui" line="366"/>
+        <location filename="../../src/window/mainwindow.ui" line="546"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="509"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="522"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="493"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="506"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="376"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="509"/>
+        <location filename="../../src/window/mainwindow.ui" line="379"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="511"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="495"/>
         <source>Remove a project.</source>
         <translation>移除一个工程。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="379"/>
-        <location filename="../../src/window/mainwindow.ui" line="553"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="511"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="524"/>
+        <location filename="../../src/window/mainwindow.ui" line="382"/>
+        <location filename="../../src/window/mainwindow.ui" line="556"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="513"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="526"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="497"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="510"/>
         <source>Remove</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="401"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="512"/>
+        <location filename="../../src/window/mainwindow.ui" line="404"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="514"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="498"/>
         <source>Selected: N/A</source>
         <translation>已选择：N/A</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="432"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="514"/>
+        <location filename="../../src/window/mainwindow.ui" line="435"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="516"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="500"/>
         <source>If the downloaded file exists, it will be replaced.</source>
         <translation>如果下载文件已存在，它将会被替换。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="435"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="516"/>
+        <location filename="../../src/window/mainwindow.ui" line="438"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="518"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="502"/>
         <source>Override</source>
         <translation>覆盖</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="540"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="518"/>
+        <location filename="../../src/window/mainwindow.ui" line="543"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="520"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="504"/>
         <source>Add a file that needs monitoring.</source>
         <translation>添加一个需要监听的文件。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="550"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="522"/>
+        <location filename="../../src/window/mainwindow.ui" line="553"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="524"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="508"/>
         <source>Remove the currently monitored file(s).</source>
         <translation>移除当前正在监听的文件。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="563"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="526"/>
+        <location filename="../../src/window/mainwindow.ui" line="566"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="528"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="512"/>
         <source>Monitor the selected files. They will be automatically uploaded when created or modified.</source>
         <translation>监听所选文件。这些文件在被创建或修改后将会被自动上传。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="566"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="528"/>
+        <location filename="../../src/window/mainwindow.ui" line="569"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="530"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="514"/>
         <source>File Watcher</source>
         <translation>文件监听器</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="644"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="529"/>
+        <location filename="../../src/window/mainwindow.ui" line="650"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="531"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="515"/>
         <source>Download</source>
         <translation>下载</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.ui" line="657"/>
-        <location filename="../../src/window/mainwindow.ui" line="774"/>
-        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="530"/>
+        <location filename="../../src/window/mainwindow.ui" line="663"/>
+        <location filename="../../src/window/mainwindow.ui" line="780"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="532"/>
+        <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="534"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="516"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="518"/>
-        <location filename="../../src/window/mainwindow.cpp" line="446"/>
+        <location filename="../../src/window/mainwindow.cpp" line="453"/>
         <source>Upload</source>
         <translation>上传</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="123"/>
+        <location filename="../../src/window/mainwindow.cpp" line="127"/>
         <source>New Project</source>
         <translation>新建工程</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="123"/>
+        <location filename="../../src/window/mainwindow.cpp" line="127"/>
         <source>Please input the project name:</source>
         <translation>请输入项目名称：</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="147"/>
+        <location filename="../../src/window/mainwindow.cpp" line="151"/>
         <source>Are you sure you want to delete:
 %1(%2)
 ?</source>
         <translation>确定要删除：%1(%2)？</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="173"/>
-        <location filename="../../src/window/mainwindow.cpp" line="265"/>
+        <location filename="../../src/window/mainwindow.cpp" line="177"/>
+        <location filename="../../src/window/mainwindow.cpp" line="269"/>
         <source>Open Files</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="207"/>
+        <location filename="../../src/window/mainwindow.cpp" line="211"/>
         <source>Are you sure you want to delete the selected files?</source>
         <translation>确定要移除所选文件吗？</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="401"/>
+        <location filename="../../src/window/mainwindow.cpp" line="408"/>
         <source>Open File</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="438"/>
+        <location filename="../../src/window/mainwindow.cpp" line="445"/>
         <source>Downlaod</source>
         <translation>下载</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="146"/>
-        <location filename="../../src/window/mainwindow.cpp" line="207"/>
-        <location filename="../../src/window/mainwindow.cpp" line="533"/>
-        <location filename="../../src/window/mainwindow.cpp" line="903"/>
-        <location filename="../../src/window/mainwindow.cpp" line="905"/>
+        <location filename="../../src/window/mainwindow.cpp" line="150"/>
+        <location filename="../../src/window/mainwindow.cpp" line="211"/>
+        <location filename="../../src/window/mainwindow.cpp" line="540"/>
+        <location filename="../../src/window/mainwindow.cpp" line="910"/>
         <location filename="../../src/window/mainwindow.cpp" line="912"/>
-        <location filename="../../src/window/mainwindow.cpp" line="952"/>
-        <location filename="../../src/window/mainwindow.cpp" line="954"/>
+        <location filename="../../src/window/mainwindow.cpp" line="919"/>
+        <location filename="../../src/window/mainwindow.cpp" line="959"/>
         <location filename="../../src/window/mainwindow.cpp" line="961"/>
-        <location filename="../../src/window/mainwindow.cpp" line="988"/>
-        <location filename="../../src/window/mainwindow.cpp" line="990"/>
+        <location filename="../../src/window/mainwindow.cpp" line="968"/>
+        <location filename="../../src/window/mainwindow.cpp" line="995"/>
         <location filename="../../src/window/mainwindow.cpp" line="997"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1004"/>
         <source>Reminder</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="533"/>
+        <location filename="../../src/window/mainwindow.cpp" line="540"/>
         <source>Download Directory Not Exists.</source>
         <translation>下载目录不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="617"/>
+        <location filename="../../src/window/mainwindow.cpp" line="624"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="617"/>
+        <location filename="../../src/window/mainwindow.cpp" line="624"/>
         <source>Work Dir</source>
         <translation>工作目录</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="617"/>
+        <location filename="../../src/window/mainwindow.cpp" line="624"/>
         <source>RDS</source>
         <translation>运行下载脚本</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="617"/>
+        <location filename="../../src/window/mainwindow.cpp" line="624"/>
         <source>RUS</source>
         <translation>运行上传脚本</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="617"/>
-        <location filename="../../src/window/mainwindow.cpp" line="646"/>
+        <location filename="../../src/window/mainwindow.cpp" line="624"/>
+        <location filename="../../src/window/mainwindow.cpp" line="653"/>
         <source>Options</source>
         <translation>操作</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="747"/>
+        <location filename="../../src/window/mainwindow.cpp" line="754"/>
         <source>Selected: </source>
         <translation>已选择： </translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="975"/>
+        <location filename="../../src/window/mainwindow.cpp" line="982"/>
         <source>%1 file(s) uploaded</source>
         <translation>%1 个文件已上传</translation>
+    </message>
+</context>
+<context>
+    <name>OtherService</name>
+    <message>
+        <location filename="../../src/service/otherservice.cpp" line="85"/>
+        <location filename="../../src/service/otherservice.cpp" line="150"/>
+        <location filename="../../src/service/otherservice.cpp" line="214"/>
+        <location filename="../../src/service/otherservice.cpp" line="285"/>
+        <source>Server has returned to the login page. Please try to log in again.</source>
+        <translation type="unfinished">服务器返回登录页面，请重新尝试再次登录。</translation>
     </message>
 </context>
 <context>

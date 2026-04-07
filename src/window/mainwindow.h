@@ -45,6 +45,7 @@ protected:
     bool event(QEvent *e) override ;
     void closeEvent(QCloseEvent *event) override ;
     void changeEvent(QEvent *event) override ;
+    bool eventFilter(QObject *watched, QEvent *event) override ;
 
 private:
     Ui::MainWindow *ui;
