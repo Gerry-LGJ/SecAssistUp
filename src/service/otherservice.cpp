@@ -15,7 +15,9 @@ OtherService::OtherService(QObject *parent)
     mDeleteCallable = new NetworkCallable(this);
     mRenameCallable = new NetworkCallable(this);
     mCutCallable    = new NetworkCallable(this);
+    mCopyCallable   = new NetworkCallable(this);
     mPasteCallable  = new NetworkCallable(this);
+    mMkdirCallable  = new NetworkCallable(this);
     mLoginWindow    = LoginWindow::getInstance();
     mMainWindow     = MainWindow::getInstance();
     mSettings       = SettingsHelper::getInstance();
@@ -32,7 +34,9 @@ void OtherService::initCallable()
     initDeleteCallable();
     initRenameCallable();
     initCutCallable();
+    initCopyCallable();;
     initPasteCallable();
+    initMkdirCallable();
 }
 
 void OtherService::initDeleteCallable()
@@ -228,6 +232,70 @@ void OtherService::initCutCallable()
     });
 }
 
+void OtherService::initCopyCallable()
+{
+    MainService *mService = MainService::getInstance();
+
+    connect(mCopyCallable, &NetworkCallable::start, this, [=] {
+        mCopying = true;
+    });
+    connect(mCopyCallable, &NetworkCallable::finish, this, [=] {
+        mCopying = false;
+    });
+    connect(mCopyCallable, &NetworkCallable::error, this, [=] (int status, QString errorString, QString result) {
+        qDebug() << "initCopyCallable" << "error" <<
+            "status:" << status <<
+            "errorString:" << errorString <<
+            "result:" << result;
+        QVariantMap map;
+        map["resultCode"]  = MSEvent::RESULT_CODE_NETWORK_ONERROR;
+        map["status"]      = status;
+        map["errorString"] = errorString;
+        map["result"]      = result;
+        sendMsgToObject(mSender, MSEvent::EVENT_TYPE_COPY_CFM, map);
+
+        mCopying = false;
+        transition(STATE_TYPE_IDLE);
+    });
+    connect(mCopyCallable, &NetworkCallable::success, this, [=] (QString result) {
+        qDebug() << "Copy result:" << result;
+        uint16_t resultCode = MSEvent::RESULT_CODE_FAIL;
+        QString errorString = "";
+
+        if (result.length() > 0) {
+            QJsonParseError err;
+            QJsonDocument doc = QJsonDocument::fromJson(result.toUtf8(), &err);
+
+            if (err.error == QJsonParseError::NoError) {
+                bool code    = doc.object().value("code").toBool(false);
+                QString data = doc.object().value("data").toString();
+                if (code) {
+                    resultCode = MSEvent::RESULT_CODE_SUCCESS;
+                } else {
+                    qDebug() << "The server returned that the copy failed. msg:" << data;
+                }
+                errorString = data;
+
+            } else {
+                if (returnLoginPage(mCopyCallable, result)) {
+                    resultCode = MSEvent::RESULT_CODE_SESSION_INVALID;
+                    errorString = tr("Server has returned to the login page. Please try to log in again.");
+                } else {
+                    errorString = err.errorString();
+                }
+            }
+        }
+
+        QVariantMap map;
+        map["resultCode"]  = resultCode;
+        map["errorString"] = errorString;
+
+        sendMsgToObject(mSender, MSEvent::EVENT_TYPE_COPY_CFM, map);
+        mCopying          = false;
+        transition(STATE_TYPE_IDLE);
+    });
+}
+
 void OtherService::initPasteCallable()
 {
     MainService *mService = MainService::getInstance();
@@ -303,6 +371,69 @@ void OtherService::initPasteCallable()
 
 }
 
+void OtherService::initMkdirCallable()
+{
+    MainService *mService = MainService::getInstance();
+
+    connect(mMkdirCallable, &NetworkCallable::start, this, [=] {
+        mMkdiring = true;
+    });
+    connect(mMkdirCallable, &NetworkCallable::finish, this, [=] {
+        mMkdiring = false;
+    });
+    connect(mMkdirCallable, &NetworkCallable::error, this, [=] (int status, QString errorString, QString result) {
+        qDebug() << "initMkdirCallable" << "error" <<
+            "status:" << status <<
+            "errorString:" << errorString <<
+            "result:" << result;
+        QVariantMap map;
+        map["resultCode"]  = MSEvent::RESULT_CODE_NETWORK_ONERROR;
+        map["status"]      = status;
+        map["errorString"] = errorString;
+        map["result"]      = result;
+        sendMsgToObject(mSender, MSEvent::EVENT_TYPE_MKDIR_CFM, map);
+
+        mMkdiring = false;
+        transition(STATE_TYPE_IDLE);
+    });
+    connect(mMkdirCallable, &NetworkCallable::success, this, [=] (QString result) {
+        qDebug() << "Mkdir result:" << result;
+        uint16_t resultCode = MSEvent::RESULT_CODE_FAIL;
+        QString errorString = "";
+
+        if (result.length() > 0) {
+            QJsonParseError err;
+            QJsonDocument doc = QJsonDocument::fromJson(result.toUtf8(), &err);
+
+            if (err.error == QJsonParseError::NoError) {
+                bool code    = doc.object().value("code").toBool(false);
+                QString data = doc.object().value("data").toString();
+                if (code) {
+                    resultCode = MSEvent::RESULT_CODE_SUCCESS;
+                } else {
+                    qDebug() << "The server returned that the copy failed. msg:" << data;
+                }
+                errorString = data;
+
+            } else {
+                if (returnLoginPage(mMkdirCallable, result)) {
+                    resultCode = MSEvent::RESULT_CODE_SESSION_INVALID;
+                    errorString = tr("Server has returned to the login page. Please try to log in again.");
+                } else {
+                    errorString = err.errorString();
+                }
+            }
+        }
+
+        QVariantMap map;
+        map["resultCode"]  = resultCode;
+        map["errorString"] = errorString;
+        sendMsgToObject(mSender, MSEvent::EVENT_TYPE_MKDIR_CFM, map);
+        mMkdiring          = false;
+        transition(STATE_TYPE_IDLE);
+    });
+}
+
 bool OtherService::otherServiceEventHandler(MSEvent *e)
 {
     uint16_t event      = e->getMSEventType();
@@ -364,6 +495,23 @@ bool OtherService::otherServiceEventHandler(MSEvent *e)
         }
         break;
     }
+    case MSEvent::EVENT_TYPE_COPY_REQ: {
+        if (mState == STATE_TYPE_IDLE) {
+
+            QList<copy_info_t> copyList = map["list"].value<QList<copy_info_t>>();
+            if (copyList.isEmpty()) {
+                qWarning() << "invalid 'list' to cut files.";
+                break;
+            }
+
+            copy(copyList);
+            transition(STATE_TYPE_COPYING);
+
+        } else {
+            qDebug() << "Error State";
+        }
+        break;
+    }
     case MSEvent::EVENT_TYPE_PASTE_REQ: {
         if (mState == STATE_TYPE_IDLE) {
 
@@ -379,6 +527,25 @@ bool OtherService::otherServiceEventHandler(MSEvent *e)
         } else {
             qDebug() << "Error State";
         }
+        break;
+    }
+    case MSEvent::EVENT_TYPE_MKDIR_REQ: {
+
+        if (mState == STATE_TYPE_IDLE) {
+
+            QString path = map["path"].toString();
+            if (path.length() == 0) {
+                qWarning() << "invalid 'path' to mkdir.";
+                break;
+            }
+
+            mkdir(path);
+            transition(STATE_TYPE_MKDIRING);
+
+        } else {
+            qDebug() << "Error State";
+        }
+
         break;
     }
     default:
@@ -466,6 +633,33 @@ bool OtherService::cut(const QList<cut_info_t> &list)
     return true;
 }
 
+bool OtherService::copy(const QList<copy_info_t> &list)
+{
+    QJsonArray jsonArray;
+    for (const auto &item : list) {
+        QJsonObject obj;
+        obj["type"] = item.type;
+        obj["path"] = item.path;
+        jsonArray.append(obj);
+    }
+    QJsonDocument       doc(jsonArray);
+    QString listValue = doc.toJson(QJsonDocument::Compact);
+    QString url       = mSettings->getWebUrl() + "/index.php?explorer/pathCopy";
+
+    qDebug() << __func__ << "url:" << url;
+    qDebug() << __func__ << "listValue:" << listValue;
+
+    mNetwork->postForm(url)
+    ->add("list", listValue)
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    ->addAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy)
+#endif
+    ->bind(this)
+    ->go(mCopyCallable);
+
+    return true;
+}
+
 bool OtherService::paste(const QString &path)
 {
     QString url = mSettings->getWebUrl() + QString("/index.php?explorer/pathPast&path=%1").arg(path);
@@ -478,6 +672,23 @@ bool OtherService::paste(const QString &path)
 #endif
     ->bind(this)
     ->go(mPasteCallable);
+
+    return true;
+}
+
+bool OtherService::mkdir(const QString &path)
+{
+
+    QString url = mSettings->getWebUrl() + QString("/index.php?explorer/mkdir&path=%1").arg(path);
+
+    qDebug() << __func__ << "url:" << url;
+
+    mNetwork->get(url)
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    ->addAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy)
+#endif
+    ->bind(this)
+    ->go(mMkdirCallable);
 
     return true;
 }

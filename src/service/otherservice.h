@@ -10,15 +10,14 @@
 #include "../window/mainwindow.h"
 #include "msevent.h"
 
-typedef struct {
+typedef struct
+{
     QString type;
     QString path;
-} del_info_t;
-
-typedef struct {
-    QString type;
-    QString path;
-} cut_info_t;
+} tp_info_t;
+typedef tp_info_t del_info_t;
+typedef tp_info_t cut_info_t;
+typedef tp_info_t copy_info_t;
 
 
 class OtherService : public QObject
@@ -30,7 +29,9 @@ public:
         STATE_TYPE_DELETING,
         STATE_TYPE_RENAMING,
         STATE_TYPE_CUTTING,
-        STATE_TYPE_PASTING
+        STATE_TYPE_COPYING,
+        STATE_TYPE_PASTING,
+        STATE_TYPE_MKDIRING
     };
     SINGLETON(OtherService)
     void init();
@@ -42,7 +43,8 @@ protected:
 
 private:
     uint16_t                  mState;
-    bool                      mDeleting, mRenaming, mCutting, mPasting;
+    bool                      mDeleting, mRenaming, mCutting,
+                              mCopying, mPasting, mMkdiring;
 
     // inst
     QObject                  *mSender;
@@ -51,7 +53,9 @@ private:
     NetworkCallable          *mDeleteCallable;
     NetworkCallable          *mRenameCallable;
     NetworkCallable          *mCutCallable;
+    NetworkCallable          *mCopyCallable;
     NetworkCallable          *mPasteCallable;
+    NetworkCallable          *mMkdirCallable;
     // win inst
     LoginWindow              *mLoginWindow;
     MainWindow               *mMainWindow;
@@ -66,14 +70,18 @@ private:
     void initDeleteCallable();
     void initRenameCallable();
     void initCutCallable();
+    void initCopyCallable();
     void initPasteCallable();
+    void initMkdirCallable();
     bool otherServiceEventHandler(MSEvent *e);
     void transition(uint16_t state);
 
     bool del(QList<del_info_t> &list);
     bool rename(const QString &path, const QString &rname_to);
     bool cut(const QList<cut_info_t> &list);
+    bool copy(const QList<copy_info_t> &list);
     bool paste(const QString &path);
+    bool mkdir(const QString &path);
 
     // tools
     static bool returnLoginPage(NetworkCallable *callable, QString &result);
@@ -84,9 +92,7 @@ signals:
 };
 
 
-Q_DECLARE_METATYPE(del_info_t)
-Q_DECLARE_METATYPE(QList<del_info_t>)
-Q_DECLARE_METATYPE(cut_info_t)
-Q_DECLARE_METATYPE(QList<cut_info_t>)
+Q_DECLARE_METATYPE(tp_info_t)
+Q_DECLARE_METATYPE(QList<tp_info_t>)
 
 #endif // OTHERSERVICE_H

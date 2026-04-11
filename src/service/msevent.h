@@ -22,7 +22,9 @@ public:
         EVENT_TYPE_DELETE_REQ,
         EVENT_TYPE_RENAME_REQ,
         EVENT_TYPE_CUT_REQ,
-        EVENT_TYPE_PASTE_REQ
+        EVENT_TYPE_COPY_REQ,
+        EVENT_TYPE_PASTE_REQ,
+        EVENT_TYPE_MKDIR_REQ
     };
     enum {
         EVENT_TYPE_BASE_CFM = 0x0200,
@@ -34,7 +36,9 @@ public:
         EVENT_TYPE_DELETE_CFM,
         EVENT_TYPE_RENAME_CFM,
         EVENT_TYPE_CUT_CFM,
-        EVENT_TYPE_PASTE_CFM
+        EVENT_TYPE_COPY_CFM,
+        EVENT_TYPE_PASTE_CFM,
+        EVENT_TYPE_MKDIR_CFM
     };
     enum {
         EVENT_TYPE_BASE_IND = 0x0300,

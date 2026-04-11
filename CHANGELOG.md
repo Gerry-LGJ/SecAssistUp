@@ -1,1 +1,3 @@
 - Dragging the file into the list can directly upload or add it.
+- Added a new right-click operation menu.
+- Fix the issue where the recorder fails to update in real time.

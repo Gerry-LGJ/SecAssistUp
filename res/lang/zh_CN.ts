@@ -273,6 +273,7 @@
         <location filename="../../src/window/mainwindow.ui" line="650"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="531"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="515"/>
+        <location filename="../../src/window/mainwindow.cpp" line="455"/>
         <source>Download</source>
         <translation>下载</translation>
     </message>
@@ -283,102 +284,155 @@
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Debug/SecAssistUp_autogen/include/ui_mainwindow.h" line="534"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="516"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="518"/>
-        <location filename="../../src/window/mainwindow.cpp" line="453"/>
+        <location filename="../../src/window/mainwindow.cpp" line="452"/>
+        <location filename="../../src/window/mainwindow.cpp" line="620"/>
         <source>Upload</source>
         <translation>上传</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="127"/>
+        <location filename="../../src/window/mainwindow.cpp" line="128"/>
         <source>New Project</source>
         <translation>新建工程</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="127"/>
+        <location filename="../../src/window/mainwindow.cpp" line="128"/>
         <source>Please input the project name:</source>
         <translation>请输入项目名称：</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="151"/>
+        <location filename="../../src/window/mainwindow.cpp" line="152"/>
         <source>Are you sure you want to delete:
 %1(%2)
 ?</source>
         <translation>确定要删除：%1(%2)？</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="177"/>
-        <location filename="../../src/window/mainwindow.cpp" line="269"/>
+        <location filename="../../src/window/mainwindow.cpp" line="178"/>
+        <location filename="../../src/window/mainwindow.cpp" line="733"/>
         <source>Open Files</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="211"/>
+        <location filename="../../src/window/mainwindow.cpp" line="212"/>
         <source>Are you sure you want to delete the selected files?</source>
         <translation>确定要移除所选文件吗？</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="408"/>
+        <location filename="../../src/window/mainwindow.cpp" line="575"/>
         <source>Open File</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="445"/>
+        <location filename="../../src/window/mainwindow.cpp" line="612"/>
         <source>Downlaod</source>
         <translation>下载</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="150"/>
-        <location filename="../../src/window/mainwindow.cpp" line="211"/>
-        <location filename="../../src/window/mainwindow.cpp" line="540"/>
-        <location filename="../../src/window/mainwindow.cpp" line="910"/>
-        <location filename="../../src/window/mainwindow.cpp" line="912"/>
-        <location filename="../../src/window/mainwindow.cpp" line="919"/>
-        <location filename="../../src/window/mainwindow.cpp" line="959"/>
-        <location filename="../../src/window/mainwindow.cpp" line="961"/>
-        <location filename="../../src/window/mainwindow.cpp" line="968"/>
-        <location filename="../../src/window/mainwindow.cpp" line="995"/>
-        <location filename="../../src/window/mainwindow.cpp" line="997"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1004"/>
+        <location filename="../../src/window/mainwindow.cpp" line="151"/>
+        <location filename="../../src/window/mainwindow.cpp" line="212"/>
+        <location filename="../../src/window/mainwindow.cpp" line="407"/>
+        <location filename="../../src/window/mainwindow.cpp" line="707"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1100"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1102"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1109"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1149"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1151"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1158"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1185"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1187"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1194"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1221"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1223"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1230"/>
         <source>Reminder</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="540"/>
+        <location filename="../../src/window/mainwindow.cpp" line="296"/>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="322"/>
+        <source>Cut</source>
+        <translation>剪切</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="348"/>
+        <source>Paste</source>
+        <translation>粘贴</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="362"/>
+        <location filename="../../src/window/mainwindow.cpp" line="373"/>
+        <source>Rename</source>
+        <translation>重命名</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="373"/>
+        <source>Rename %1 as:</source>
+        <translation>将 %1 重命名为：</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="397"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="408"/>
+        <source>Are you sure you want to delete the selected content?</source>
+        <translation>确认删除选中内容吗？</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="429"/>
+        <location filename="../../src/window/mainwindow.cpp" line="435"/>
+        <location filename="../../src/window/mainwindow.cpp" line="436"/>
+        <source>New Folder</source>
+        <translation>新建文件夹</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="435"/>
+        <source>Please enter the folder name:</source>
+        <translation>请输入文件夹名称：</translation>
+    </message>
+    <message>
+        <location filename="../../src/window/mainwindow.cpp" line="707"/>
         <source>Download Directory Not Exists.</source>
         <translation>下载目录不存在。</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="624"/>
+        <location filename="../../src/window/mainwindow.cpp" line="814"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="624"/>
+        <location filename="../../src/window/mainwindow.cpp" line="814"/>
         <source>Work Dir</source>
         <translation>工作目录</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="624"/>
+        <location filename="../../src/window/mainwindow.cpp" line="814"/>
         <source>RDS</source>
         <translation>运行下载脚本</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="624"/>
+        <location filename="../../src/window/mainwindow.cpp" line="814"/>
         <source>RUS</source>
         <translation>运行上传脚本</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="624"/>
-        <location filename="../../src/window/mainwindow.cpp" line="653"/>
+        <location filename="../../src/window/mainwindow.cpp" line="814"/>
+        <location filename="../../src/window/mainwindow.cpp" line="843"/>
         <source>Options</source>
         <translation>操作</translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="754"/>
+        <location filename="../../src/window/mainwindow.cpp" line="944"/>
         <source>Selected: </source>
         <translation>已选择： </translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="982"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1172"/>
         <source>%1 file(s) uploaded</source>
         <translation>%1 个文件已上传</translation>
     </message>
@@ -386,12 +440,14 @@
 <context>
     <name>OtherService</name>
     <message>
-        <location filename="../../src/service/otherservice.cpp" line="85"/>
-        <location filename="../../src/service/otherservice.cpp" line="150"/>
-        <location filename="../../src/service/otherservice.cpp" line="214"/>
-        <location filename="../../src/service/otherservice.cpp" line="285"/>
+        <location filename="../../src/service/otherservice.cpp" line="89"/>
+        <location filename="../../src/service/otherservice.cpp" line="154"/>
+        <location filename="../../src/service/otherservice.cpp" line="218"/>
+        <location filename="../../src/service/otherservice.cpp" line="282"/>
+        <location filename="../../src/service/otherservice.cpp" line="353"/>
+        <location filename="../../src/service/otherservice.cpp" line="421"/>
         <source>Server has returned to the login page. Please try to log in again.</source>
-        <translation type="unfinished">服务器返回登录页面，请重新尝试再次登录。</translation>
+        <translation>服务器返回登录页面，请重新尝试再次登录。</translation>
     </message>
 </context>
 <context>

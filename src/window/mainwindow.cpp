@@ -12,6 +12,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
+#include <QMenu>
 
 #include "../common/filedata_t.h"
 #include "../service/refreshservice.h"
@@ -263,26 +264,7 @@ void MainWindow::initPushButton()
     connect(this->ui->pushButton_Download, &QPushButton::clicked, this, &MainWindow::onClickPushButtonDownload);
 
     // Upload_l Button
-    connect(this->ui->pushButton_Upload_l, &QPushButton::clicked, this, [=] {
-        qDebug() << "onClick Upload_l Button";
-        RefreshService *mRefreshService = RefreshService::getInstance();
-        QStringList files               = QFileDialog::getOpenFileNames(this, tr("Open Files"));
-        project_info_t pinfo            = mActiveProjectInfo;
-        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
-        if (!files.isEmpty()) {
-            qDebug() << "pushButton_Upload_l:" << files;
-            QVariantMap map;
-            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_UPLOAD_REQ);
-            map["files"]   = files;
-            map["dir"]     = pinfo.wdir;
-            map["webdir"]  = webdir;
-            map["script"]  = "";
-            event->setData(QVariant(map));
-            QCoreApplication::postEvent(mMainService, event);
-        } else {
-            qDebug() << "pushButton_Upload_l User Cancel Select Files";
-        }
-    });
+    connect(this->ui->pushButton_Upload_l, &QPushButton::clicked, this, &MainWindow::onClickPushButtonUpload_l);
 
     // Upload_r Button
     connect(this->ui->pushButton_Upload_r, &QPushButton::clicked, this, &MainWindow::onClickPushButtonUpload_r);
@@ -292,6 +274,7 @@ void MainWindow::initListWidgetWebFiles()
 {
     qDebug() << __func__;
     mListWidgetWebFiles->installEventFilter(this);
+    mListWidgetWebFiles->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mListWidgetWebFiles, &QListWidget::itemDoubleClicked, this, [=] (QListWidgetItem *item) {
         int index                       = mListWidgetWebFiles->row(item);
@@ -307,6 +290,190 @@ void MainWindow::initListWidgetWebFiles()
             event->setData(var);
             QCoreApplication::postEvent(MainService::getInstance(), event);
         }
+    });
+
+    // 右键菜单
+    QAction *copyAction     = new QAction(tr("Copy")    , this);
+    connect(copyAction,     &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QList<file_t> files             = mRefreshService->getFileList();
+        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+        QList<copy_info_t> copylist        ;
+        QListWidget *lwwfs              = mListWidgetWebFiles;
+        QList<QListWidgetItem *> items  = lwwfs->selectedItems();
+
+        if (items.size() > 0) {
+            for (int i = 0; i < items.size(); ++i) {
+                copy_info_t cpinfo;
+                file_t info  = files.at(lwwfs->row(items.at(i)));
+                cpinfo.type = info.type;
+                cpinfo.path = webdir + "/" + info.name;
+                copylist.append(cpinfo);
+            }
+            QVariantMap map;
+            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_COPY_REQ);
+            map["list"]    = QVariant::fromValue(copylist);
+            event->setData(map);
+            QCoreApplication::postEvent(mOtherService, event);
+        }
+    });
+
+    QAction *cutAction      = new QAction(tr("Cut")     , this);
+    connect(cutAction,      &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QList<file_t> files             = mRefreshService->getFileList();
+        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+        QList<copy_info_t> cutlist        ;
+        QListWidget *lwwfs              = mListWidgetWebFiles;
+        QList<QListWidgetItem *> items  = lwwfs->selectedItems();
+
+        if (items.size() > 0) {
+            for (int i = 0; i < items.size(); ++i) {
+                cut_info_t cutinfo;
+                file_t info  = files.at(lwwfs->row(items.at(i)));
+                cutinfo.type = info.type;
+                cutinfo.path = webdir + "/" + info.name;
+                cutlist.append(cutinfo);
+            }
+            QVariantMap map;
+            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_CUT_REQ);
+            map["list"]    = QVariant::fromValue(cutlist);
+            event->setData(map);
+            QCoreApplication::postEvent(mOtherService, event);
+        }
+    });
+
+    QAction *pasteAction    = new QAction(tr("Paste")   , this);
+    connect(pasteAction,   &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QString         webdir          = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+
+        QVariantMap map;
+        MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_PASTE_REQ);
+        map["path"] = webdir;
+        event->setData(map);
+        QCoreApplication::postEvent(mOtherService, event);
+
+    });
+
+    QAction *renameAction   = new QAction(tr("Rename")  , this);
+    connect(renameAction,   &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QList<file_t> files             = mRefreshService->getFileList();
+        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+        QListWidget *lwwfs              = mListWidgetWebFiles;
+        QList<QListWidgetItem *> items  = lwwfs->selectedItems();
+
+        if (items.size() == 1) {
+            file_t info      = files.at(lwwfs->row(items.at(0)));
+            QString inputRet = QInputDialog::getText(this, tr("Rename"), QString(tr("Rename %1 as:")).arg(info.name),
+                                                     QLineEdit::Normal, info.name);
+            QString path     = webdir + "/" + info.name;
+            QString rname_to   ;
+
+            if (inputRet.length() > 0) {
+                rname_to = webdir + "/" + inputRet.left(64);
+
+                QVariantMap map;
+                MSEvent *event  = new MSEvent(this, MSEvent::EVENT_TYPE_RENAME_REQ);
+                map["path"]     = path;
+                map["rname_to"] = rname_to;
+                event->setData(map);
+                QCoreApplication::postEvent(mOtherService, event);
+
+            } else {
+                qDebug() << "Cancel Rename File";
+            }
+
+        } else {
+            qDebug() << "renameAction more select, disallow rename";
+        }
+    });
+
+    QAction *deleteAction   = new QAction(tr("Delete")  , this);
+    connect(deleteAction,   &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QList<file_t> files             = mRefreshService->getFileList();
+        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+        QList<del_info_t> dellist         ;
+        QListWidget *lwwfs              = mListWidgetWebFiles;
+        QList<QListWidgetItem *> items  = lwwfs->selectedItems();
+
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Reminder"),
+                                                                  tr("Are you sure you want to delete the selected content?"));
+        if (reply == QMessageBox::Yes) {
+            if (items.size() > 0) {
+                for (int i = 0; i < items.size(); ++i) {
+                    del_info_t delinfo;
+                    file_t info  = files.at(lwwfs->row(items.at(i)));
+                    delinfo.type = info.type;
+                    delinfo.path = webdir + "/" + info.name;
+                    dellist.append(delinfo);
+                }
+                QVariantMap map;
+                MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_DELETE_REQ);
+                map["list"]    = QVariant::fromValue(dellist);
+                event->setData(map);
+                QCoreApplication::postEvent(mOtherService, event);
+            }
+        } else {
+            qDebug() << "User cancel delete web file";
+        }
+    });
+
+    QAction *mkdirAction    = new QAction(tr("New Folder"),this);
+    connect(mkdirAction,    &QAction::triggered, this, [=] {
+        RefreshService *mRefreshService = RefreshService::getInstance();
+        OtherService   *mOtherService   = OtherService::getInstance();
+        QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+
+        QString inputRet = QInputDialog::getText(this, tr("New Folder"), tr("Please enter the folder name:"),
+                                                 QLineEdit::Normal, tr("New Folder"));
+        if (inputRet.length() > 0) {
+
+            QVariantMap map;
+            QString path    = webdir + "/" + inputRet.left(64);
+            MSEvent *event  = new MSEvent(this, MSEvent::EVENT_TYPE_MKDIR_REQ);
+            map["path"]     = path;
+            event->setData(map);
+            QCoreApplication::postEvent(mOtherService, event);
+
+        } else {
+            qDebug() << "Cancel Make Directory";
+        }
+
+    });
+
+    QAction *uploadAction   = new QAction(tr("Upload")  , this);
+    connect(uploadAction,   &QAction::triggered, this, &MainWindow::onClickPushButtonUpload_l);
+
+    QAction *downloadAction = new QAction(tr("Download"), this);
+    connect(downloadAction, &QAction::triggered, this, &MainWindow::onClickPushButtonDownload);
+
+    connect(mListWidgetWebFiles, &QListWidget::customContextMenuRequested, this, [=] (const QPoint &pos) {
+        QListWidgetItem *item = mListWidgetWebFiles->itemAt(pos);
+        int selects           = mListWidgetWebFiles->selectedItems().count();
+        QMenu menu;
+
+        if (item && selects == 1) {
+            menu.addAction(renameAction);
+        }
+        if (selects > 0) {
+            menu.addAction(copyAction);
+            menu.addAction(cutAction);
+            menu.addAction(deleteAction);
+            menu.addAction(downloadAction);
+        }
+        menu.addAction(pasteAction);
+        menu.addAction(uploadAction);
+        menu.addAction(mkdirAction);
+
+        menu.exec(mListWidgetWebFiles->mapToGlobal(pos));
     });
 }
 
@@ -555,6 +722,29 @@ void MainWindow::onClickPushButtonDownload()
         map["script"]  = pinfo.rds ? pinfo.dspath : "";
         event->setData(QVariant(map));
         QCoreApplication::postEvent(mMainService, event);
+    }
+}
+
+void MainWindow::onClickPushButtonUpload_l()
+{
+    qDebug() << "onClick Upload_l Button";
+    MainService *mMainService       = MainService::getInstance();
+    RefreshService *mRefreshService = RefreshService::getInstance();
+    QStringList files               = QFileDialog::getOpenFileNames(this, tr("Open Files"));
+    project_info_t pinfo            = mActiveProjectInfo;
+    QString webdir                  = mRefreshService->getPathByPathList(mRefreshService->getPathList());
+    if (!files.isEmpty()) {
+        qDebug() << "pushButton_Upload_l:" << files;
+        QVariantMap map;
+        MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_UPLOAD_REQ);
+        map["files"]   = files;
+        map["dir"]     = pinfo.wdir;
+        map["webdir"]  = webdir;
+        map["script"]  = "";
+        event->setData(QVariant(map));
+        QCoreApplication::postEvent(mMainService, event);
+    } else {
+        qDebug() << "pushButton_Upload_l User Cancel Select Files";
     }
 }
 
@@ -1006,6 +1196,43 @@ bool MainWindow::mSEventHandler(MSEvent *e)
         } else {
             qWarning() << "Unknow Result Code." << resultCode;
         }
+        break;
+    }
+    case MSEvent::EVENT_TYPE_DELETE_CFM:
+    case MSEvent::EVENT_TYPE_RENAME_CFM:
+    case MSEvent::EVENT_TYPE_CUT_CFM:
+    case MSEvent::EVENT_TYPE_COPY_CFM:
+    case MSEvent::EVENT_TYPE_PASTE_CFM:
+    case MSEvent::EVENT_TYPE_MKDIR_CFM: {
+
+        uint16_t resultCode = map["resultCode"].toUInt();
+        qDebug() << "resultCode:" << resultCode;
+        MainService *mMainService  = MainService::getInstance();
+        if (resultCode == MSEvent::RESULT_CODE_SUCCESS) {
+
+            // After other operation, you need to refresh the file list.
+            MSEvent *event = new MSEvent(this, MSEvent::EVENT_TYPE_REFRESH_REQ);
+            QCoreApplication::postEvent(mMainService, event);
+
+        } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
+            QString errorString = map["errorString"].toString();
+            if (errorString.length() > 0) {
+                qDebug() << "errorString:" << errorString;
+                QMessageBox::critical(this, tr("Reminder"), errorString);
+            } else {
+                QMessageBox::critical(this, tr("Reminder"), "Other Operation Failure.");
+            }
+
+        } else if (resultCode == MSEvent::RESULT_CODE_NETWORK_ONERROR) {
+            QString msg = QString("%1;%2;%3")
+            .arg(map["status"].toString(), map["errorString"].toString(), map["result"].toString());
+            qDebug() << "msg:" << msg;
+            QMessageBox::critical(this, tr("Reminder"), msg);
+
+        } else {
+            qWarning() << "Unknow Result Code." << resultCode;
+        }
+
         break;
     }
     case MSEvent::EVENT_TYPE_FILE_CHANGED_IND: {

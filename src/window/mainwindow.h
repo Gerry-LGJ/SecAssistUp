@@ -84,6 +84,7 @@ private:
     void initPDBHCbSearch(void);
     void initUFDBHCbReadAllByPid(void);
     void onClickPushButtonDownload(void);
+    void onClickPushButtonUpload_l(void);
     void onClickPushButtonUpload_r(void);
     void updateTableWidgetDataFromProjectsInfo();
     void updateListWidgetDataFromUploadFilesInfo();

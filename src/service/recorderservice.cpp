@@ -81,4 +81,5 @@ void RecorderService::push(QFileInfoList infos, bool isDownload)
             mRecords.prepend(ri);
         }
     }
+    emit onAddNew();
 }
