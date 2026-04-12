@@ -711,7 +711,9 @@ void MainWindow::onClickPushButtonDownload()
     if (items.size() > 0) {
         for (int i = 0; i < items.size(); ++i) {
             file_t info = list.at(lwwfs->row(items.at(i)));
-            downFiles.append(info.name);
+            if (info.isFile) {
+                downFiles.append(info.name);
+            }
         }
         qDebug() << "Downlaod files:" << downFiles;
         QVariantMap map;
@@ -805,6 +807,7 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
             "rus:" << info.rus;
     }
     QTableWidget *twps = mTableWidgetProjects;
+    QSignalBlocker blocker(twps);
 
     // 清理表格数据
     twps->clear();
@@ -850,6 +853,8 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
         });
         twps->setCellWidget(i, 4, btn);
     }
+
+    blocker.unblock();
 
     // 渲染完表格数据后尝试从mRestoreSelectPid中找到上一次选择的project对象，并选择它
     if (restoreSelectRow != -1) {

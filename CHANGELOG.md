@@ -1,3 +1,2 @@
-- Dragging the file into the list can directly upload or add it.
-- Added a new right-click operation menu.
-- Fix the issue where the recorder fails to update in real time.
+- Fix the issue where the folder also causes download problems.
+- Optimizing the rendering project information table generates unnecessary signals.
