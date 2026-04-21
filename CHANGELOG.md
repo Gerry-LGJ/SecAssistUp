@@ -1,2 +1,3 @@
-- Fix the issue where the folder also causes download problems.
-- Optimizing the rendering project information table generates unnecessary signals.
+- Adjust the layout of some of the tables.
+-  Adjust the style of some buttons.
+-  Restore the previously selected item after refreshing the list.
