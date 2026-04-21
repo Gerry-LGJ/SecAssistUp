@@ -39,6 +39,7 @@ void RecorderDialog::reloadRecord()
     horizontalHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     horizontalHeader->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     horizontalHeader->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    horizontalHeader->setSectionResizeMode(4, QHeaderView::ResizeToContents);
     // 开始渲染数据
     for (int i = 0; i < list.size(); ++i) {
         record_info_t info = list.at(i);
@@ -49,7 +50,7 @@ void RecorderDialog::reloadRecord()
         twrs->setItem(i, 1, new QTableWidgetItem(info.info.fileName()));
         twrs->setItem(i, 2, new QTableWidgetItem(info.md5));
         twrs->setItem(i, 3, fpItem);
-        twrs->setItem(i, 4, new QTableWidgetItem(info.isDownload ? "Download" : "Upload"));
+        twrs->setItem(i, 4, new QTableWidgetItem(info.isDownload ? tr("Download") : tr("Upload")));
     }
 }
 

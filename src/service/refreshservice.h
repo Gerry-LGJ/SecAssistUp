@@ -27,6 +27,7 @@ public:
     QString       getPathByPathList(QStringList pathList);
     void          restartCountdown();
     void          stopCountdown();
+    void          recoverSelects();
 
 protected:
     bool event(QEvent *e);
@@ -37,6 +38,7 @@ private:
     QStringList      mRequestPathList;
     QStringList      mPathList;
     QList<file_t>    mFileList;
+    QList<file_t>    mPreviousSelects;
 
     // inst
     QObject         *mRefreshReqSender;
@@ -56,6 +58,7 @@ private:
     void transition(uint16_t state);
     void sendMsgToObject(QObject *object, uint16_t code, QVariantMap map);
     bool onParseJsonToList(QString result);
+    void recordSelects();
 
     // countdown
     int              mCountdown;

@@ -6,6 +6,8 @@
 #include <QJsonArray>
 #include <QCoreApplication>
 
+#include "../window/mainwindow.h"
+
 RefreshService::RefreshService(QObject *parent)
     : QObject{parent}
 {
@@ -180,7 +182,7 @@ bool RefreshService::onParseJsonToList(QString result)
         d.ctime         = obj.value("ctime").toVariant().toULongLong();
         d.mtime         = obj.value("mtime").toVariant().toULongLong();
         d.is_readable   = obj.value("is_readable").toInt();
-        d.is_writeable  = obj.value("is_writeable").toInt();\
+        d.is_writeable  = obj.value("is_writeable").toInt();
         /* is folder, so default value */
         d.size          = 0;
         d.size_friendly = "";
@@ -188,6 +190,51 @@ bool RefreshService::onParseJsonToList(QString result)
         mFileList.append(d);
     }
     return true;
+}
+
+void RefreshService::recordSelects()
+{
+    QListWidget *lwwfs             = MainWindow::getInstance()->getListWidgetWebFiles();
+    QList<QListWidgetItem *>items  = lwwfs->selectedItems();
+    QList<file_t> list             = mFileList;
+
+    mPreviousSelects.clear();
+    if (items.size() > 0) {
+        for (int i = 0; i < items.size(); ++i) {
+            file_t info = list.at(lwwfs->row(items.at(i)));
+            mPreviousSelects << info;
+        }
+    }
+}
+
+void RefreshService::recoverSelects()
+{
+    QListWidget *lwwfs             = MainWindow::getInstance()->getListWidgetWebFiles();
+    QStringList names;
+
+    // Try to restore the items that were selected before the refresh.
+    if (lwwfs->count() > 0 && mPreviousSelects.size() > 0 && mFileList.size() > 0) {
+
+        for (int i = 0; i < mPreviousSelects.size(); ++i) {
+            file_t from = mPreviousSelects.at(i);
+
+            for (int j = 0; j < mFileList.size(); ++j) {
+                file_t to = mFileList.at(j);
+
+                if (from.isFile == to.isFile &&
+                    from.name   == to.name   &&
+                    from.path   == to.path) {
+                    lwwfs->setCurrentRow(j);
+                    names << to.name;
+                }
+
+            }
+        }
+    }
+
+    if (names.size() > 0) {
+        qDebug() << __func__ << "recoverSelects:" << names;
+    }
 }
 
 void RefreshService::restartCountdown()
@@ -263,11 +310,15 @@ void RefreshService::initRefreshNetworkCallable()
 
 bool RefreshService::refresh(QStringList requestPathList)
 {
-    mRequestPathList = requestPathList;
     QString reqPath  = getPathByPathList(requestPathList);
     QString webUrl   = mSettingsHelper->getWebUrl();
     QString url      = webUrl + QString("/index.php?explorer/pathList&path=%1").arg(reqPath);
+
+    mRequestPathList = requestPathList;
+    recordSelects();
+
     qDebug() << "url:" << url;
+
     mNetwork->get(url)
     ->addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0")
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))

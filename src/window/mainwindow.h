@@ -32,6 +32,7 @@ public:
     bool updateProjectInfoToUI();
     bool updateUploadFilesInfoToUI();
     QTableWidget *getTableWidgetProjects()                   { return mTableWidgetProjects; }
+    QListWidget  *getListWidgetWebFiles()                    { return mListWidgetWebFiles; }
     QList<project_info_t> getProjectsInfo()                  { return mProjectsInfo; }
     void setRestoreSelectPid(QString pid);
     project_info_t getActiveProjectInfo()                    { return mActiveProjectInfo; }

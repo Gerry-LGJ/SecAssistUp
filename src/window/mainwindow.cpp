@@ -819,6 +819,9 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
     twps->setRowCount(list.size());
     QHeaderView *horizontalHeader = twps->horizontalHeader();
     horizontalHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    horizontalHeader->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    horizontalHeader->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+    horizontalHeader->setSectionResizeMode(4, QHeaderView::ResizeToContents);
 
     // 渲染数据
     for (int i = 0; i < list.size(); ++i) {
@@ -843,7 +846,9 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
         rus->setFlags(rus->flags() | Qt::ItemIsUserCheckable);
         twps->setItem(i, 3, rus);
 
-        QPushButton *btn = new QPushButton(tr("Options"));
+        // QPushButton *btn = new QPushButton(tr("Options"));
+        QPushButton *btn = new QPushButton(FilIconTools::convert(FilIcons::Type::More));
+        btn->setFont(FilIconTools::font());
         btn->setProperty("row", i);
         connect(btn, &QPushButton::clicked, this, [=] {
             int row = btn->property("row").toInt();
@@ -1097,6 +1102,7 @@ bool MainWindow::mSEventHandler(MSEvent *e)
             qDebug() << "Refresh Succeed.";
             this->ui->label_webPath->setText(webdir);
             updateWebFilesToUI();
+            mRefreshService->recoverSelects();
 
         } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
             QString msg = map["msg"].toString();
