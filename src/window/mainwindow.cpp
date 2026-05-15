@@ -721,7 +721,7 @@ void MainWindow::onClickPushButtonDownload()
         map["files"]   = downFiles;
         map["dir"]     = dir;
         map["webdir"]  = webdir;
-        map["script"]  = pinfo.rds ? pinfo.dspath : "";
+        map["script"]  = (mSettingsHelper->getAppDownloadMode() == 1) ? (pinfo.rds ? pinfo.dspath : "") : "";
         event->setData(QVariant(map));
         QCoreApplication::postEvent(mMainService, event);
     }

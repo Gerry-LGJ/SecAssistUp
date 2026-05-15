@@ -95,7 +95,7 @@ bool UpdateService::checkForAutoUpdate(bool isManual)
 
             if (info.exists()) {
                 QStringList arguments;
-                arguments << installer << "/SILENT" << "/AUTOUNINSTALL" << "/LAUNCHAPP";
+                arguments << installer << "/SILENT" /*<< "/AUTOUNINSTALL"*/ << "/LAUNCHAPP";
                 QProcess::startDetached(installer, arguments);
                 return true;
             }

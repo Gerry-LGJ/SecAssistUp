@@ -1,3 +1,2 @@
-- Adjust the layout of some of the tables.
--  Adjust the style of some buttons.
--  Restore the previously selected item after refreshing the list.
+-  Fix the issue where the default download mode executes the script abnormally.
+-  Remove the logic for uninstalling the existing program during the upgrade process.
