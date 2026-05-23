@@ -522,8 +522,15 @@ void MainWindow::initTableWidgetProjects()
     });
     connect(mTableWidgetProjects, &QTableWidget::itemClicked, this, [=] (QTableWidgetItem *item) {
         project_info_t info = mProjectsInfo.at(item->row());
-        mActiveProjectInfo  = info;
+
         qDebug() << "onItemClicked Row:" << item->row() << "column:" << item->column() << "pid:" << info.pid << "name:" << info.name;
+        if (info.pid == mActiveProjectInfo.pid) {
+            qDebug() << "onItemClicked"<< "The project has now been selected.";
+            return ;
+        }
+
+        mActiveProjectInfo  = info;
+
         // 更新当前选择Project的Name
         setSelectProjectName(info.name);
         // 设置需要恢复选择的pid，以便刷新后重新自动选择
@@ -1091,6 +1098,8 @@ bool MainWindow::mSEventHandler(MSEvent *e)
     QVariantMap map = e->getData().toMap();
     qDebug("MainWindow::mSEventHandler event:0x%04x", event);
     switch (event) {
+
+    case MSEvent::EVENT_TYPE_REFRESH_CFM:
     case MSEvent::EVENT_TYPE_REFRESH_IND: {
 
         uint16_t resultCode = map["resultCode"].toUInt();
@@ -1110,12 +1119,12 @@ bool MainWindow::mSEventHandler(MSEvent *e)
                 qDebug() << "msg:" << msg;
                 QMessageBox::critical(this, tr("Reminder"), msg);
             } else {
-                QMessageBox::critical(this, tr("Reminder"), "Refresh Failure.");
+                QMessageBox::critical(this, tr("Reminder"), tr("Refresh Failure."));
             }
 
         } else if (resultCode == MSEvent::RESULT_CODE_NETWORK_ONERROR) {
-            QString msg = QString("%1;%2;%3")
-                .arg(map["status"].toString(), map["errorString"].toString(), map["result"].toString());
+            QString msg = QString("%1;%2;%3\n%4")
+                              .arg(map["status"].toString(), map["errorString"].toString(), map["result"].toString(), tr("Network abnormality. Please log in again."));
             qDebug() << "msg:" << msg;
             QMessageBox::critical(this, tr("Reminder"), msg);
 
@@ -1123,23 +1132,6 @@ bool MainWindow::mSEventHandler(MSEvent *e)
             qWarning() << "Unknow Result Code." << resultCode;
         }
 
-        break;
-    }
-    case MSEvent::EVENT_TYPE_REFRESH_CFM: {
-
-        uint16_t resultCode = map["resultCode"].toUInt();
-        qDebug() << "resultCode:" << resultCode;
-        if (resultCode == MSEvent::RESULT_CODE_SUCCESS) {
-
-        } else if (resultCode == MSEvent::RESULT_CODE_FAIL) {
-
-
-        } else if (resultCode == MSEvent::RESULT_CODE_NETWORK_ONERROR) {
-
-
-        } else {
-            qWarning() << "Unknow Result Code." << resultCode;
-        }
         break;
     }
     case MSEvent::EVENT_TYPE_DOWNLOAD_CFM: {

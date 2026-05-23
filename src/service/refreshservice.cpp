@@ -11,11 +11,11 @@
 RefreshService::RefreshService(QObject *parent)
     : QObject{parent}
 {
-    mNetwork = Network::getInstance();
+    mNetwork            = Network::getInstance();
     mRefreshReqCallable = new NetworkCallable(this);
-    mLoginWindow = LoginWindow::getInstance();
-    mMainWindow = MainWindow::getInstance();
-    mSettingsHelper = SettingsHelper::getInstance();
+    mLoginWindow        = LoginWindow::getInstance();
+    mMainWindow         = MainWindow::getInstance();
+    mSettingsHelper     = SettingsHelper::getInstance();
 }
 
 
@@ -282,7 +282,11 @@ void RefreshService::initRefreshNetworkCallable()
         map["status"]      = status;
         map["errorString"] = errorString;
         map["result"]      = result;
-        sendMsgToObject(mRefreshReqSender, MSEvent::EVENT_TYPE_REFRESH_CFM, map);
+        if (mRefreshReqSender) {
+            sendMsgToObject(mRefreshReqSender, MSEvent::EVENT_TYPE_REFRESH_CFM, map);
+        } else {
+            sendMsgToObject(mMainWindow, MSEvent::EVENT_TYPE_REFRESH_CFM, map);
+        }
 
     });
     connect(mRefreshReqCallable, &NetworkCallable::success, this, [=] (QString result) {
@@ -295,7 +299,7 @@ void RefreshService::initRefreshNetworkCallable()
             map["resultCode"] = MSEvent::RESULT_CODE_SUCCESS;
             map["msg"]        = "Success";
             sendMsgToObject(mRefreshReqSender, MSEvent::EVENT_TYPE_REFRESH_CFM, map);
-            sendMsgToObject(mMainWindow, MSEvent::EVENT_TYPE_REFRESH_IND, map);
+            sendMsgToObject(mMainWindow,       MSEvent::EVENT_TYPE_REFRESH_IND, map);
             restartCountdown();
         } else {
             // return fail message

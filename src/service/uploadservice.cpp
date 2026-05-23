@@ -501,7 +501,7 @@ int UploadService::runUploadScript()
 
 void UploadService::transition(uint16_t state)
 {
-    qDebug() << "LoginService::transition" << "state :" << state;
+    qDebug() << "UploadService::transition" << "state :" << state;
     mState = state;
 }
 
@@ -534,11 +534,29 @@ bool UploadService::uploadServiceEventHandler(MSEvent *e)
             mScript = map["script"].toString();
             if (mFiles.size() == 0) {
                 qWarning() << "Invalid mFiles";
-                break;
+                break;          // break switch(event)
             }
             if (mWebDir.length() == 0) {
                 qWarning() << "Invalid mWebDir";
-                break;
+                break;          // break switch(event)
+            }
+
+            // Check whether the required uploaded files exist
+            bool checkret = true;
+            QString nonExistent;
+            for (int i = 0; i < mFiles.size(); ++i) {
+                if (!QFile::exists(mFiles.at(i))) {
+                    nonExistent = mFiles.at(i);
+                    checkret    = false;
+                    break;      // break for
+                }
+            }
+            if (!checkret) {
+                QVariantMap map;
+                map["resultCode"]  = MSEvent::RESULT_CODE_FAIL;
+                map["errorString"] = tr("A non-existent file is being uploaded. Stopping the upload. ") + nonExistent;
+                sendMsgToObject(e->getSender(), MSEvent::EVENT_TYPE_UPLOAD_CFM, map);
+                break;          // break switch(event)
             }
 
             // upload();

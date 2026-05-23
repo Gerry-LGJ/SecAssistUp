@@ -1,2 +1,4 @@
--  Fix the issue where the default download mode executes the script abnormally.
--  Remove the logic for uninstalling the existing program during the upgrade process.
+-  Fix the issue where the system becomes in an abnormal state when attempting to upload a non-existent file.
+-  Fix the issue where the proxy settings are abnormal by default.
+-  Fix the issue where there is no prompt displayed after a refresh fails.
+-  Optimize the logic for rendering data in the project table.

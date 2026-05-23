@@ -379,6 +379,7 @@ void SettingsDialog::onClickPushButtonAgentTest()
     QString agentUserName = this->ui->lineEdit_UserName->text();
     QString agentPassword = this->ui->lineEdit_Password->text();
     switch (this->ui->comboBox_AgentMode->currentIndex()) {
+    case 0: agentMode = QNetworkProxy::ProxyType::NoProxy;     break;
     case 1: agentMode = QNetworkProxy::ProxyType::HttpProxy;   break;
     case 2: agentMode = QNetworkProxy::ProxyType::Socks5Proxy; break;
     }
@@ -404,6 +405,7 @@ void SettingsDialog::onClickPushButtonAgentConfirm()
     qDebug() << __func__;
     uint8_t proxyType = 0;
     switch (this->ui->comboBox_AgentMode->currentIndex()) {
+    case 0: proxyType = QNetworkProxy::ProxyType::NoProxy;     break;
     case 1: proxyType = QNetworkProxy::ProxyType::HttpProxy;   break;
     case 2: proxyType = QNetworkProxy::ProxyType::Socks5Proxy; break;
     default:
@@ -569,5 +571,7 @@ void SettingsDialog::reloadAgentConfigurations()
     QString agentPassword = mSettingsHelper->getAppAgentPassword();
     if (agentMode != QNetworkProxy::ProxyType::NoProxy) {
         mNetwork->setApplicationProxy((NetworkProxyType::ProxyType)agentMode, agentServer, agentPort, agentUserName, agentPassword);
+    } else if (agentMode == QNetworkProxy::ProxyType::NoProxy) {
+        mNetwork->setApplicationProxy(NetworkProxyType::NoProxy);
     }
 }
