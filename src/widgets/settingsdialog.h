@@ -25,11 +25,6 @@ public:
     ~SettingsDialog();
 
 public:
-    enum {
-        AGENT_MODE_NO_PROXY,
-        AGENT_MODE_HTTP_PROXY,
-        AGENT_MODE_SOCKS5_PROXY
-    };
     static void initRunAtSystemStartup(void);
 
 // protected:

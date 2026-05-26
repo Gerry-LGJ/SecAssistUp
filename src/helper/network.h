@@ -25,21 +25,6 @@ namespace NetworkType {
     QML_NAMED_ELEMENT(NetworkType)
 }
 
-namespace NetworkProxyType {
-    Q_NAMESPACE
-    // enum QNetworkProxy::ProxyType
-    enum ProxyType {
-        DefaultProxy,
-        Socks5Proxy,
-        NoProxy,
-        HttpProxy,
-        HttpCachingProxy,
-        FtpCachingProxy
-    };
-    Q_ENUM_NS(ProxyType)
-    QML_NAMED_ELEMENT(NetworkProxyType)
-}
-
 /**
  * @brief The NetworkCallable class
  */
@@ -118,6 +103,8 @@ public:
     Q_INVOKABLE NetworkParams *addAttribute(int code, const QVariant &val);
 
     Q_INVOKABLE NetworkParams *setProxy(int type, const QString &hostName = QString(), quint16 port = 0, const QString &user = QString(), const QString &password = QString());
+
+    Q_INVOKABLE NetworkParams *setProxy(const QNetworkProxy &networkProxy);
 
     Q_INVOKABLE NetworkParams *toDownload(QString destPath, bool append = false);
 
@@ -221,9 +208,11 @@ public:
 
     Q_INVOKABLE NetworkParams *deleteJsonArray(const QString &url);
 
-    Q_INVOKABLE void setApplicationProxy(NetworkProxyType::ProxyType type,
+    Q_INVOKABLE void setApplicationProxy(QNetworkProxy::ProxyType type,
                                          const QString &hostName = QString(), quint16 port = 0,
                                          const QString &user = QString(), const QString &password = QString());
+
+    Q_INVOKABLE void setApplicationProxy(const QNetworkProxy &networkProxy);
 
     void handle(NetworkParams *params, NetworkCallable *result);
 

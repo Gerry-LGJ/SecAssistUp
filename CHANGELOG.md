@@ -1,4 +1,2 @@
--  Fix the issue where the system becomes in an abnormal state when attempting to upload a non-existent file.
--  Fix the issue where the proxy settings are abnormal by default.
--  Fix the issue where there is no prompt displayed after a refresh fails.
--  Optimize the logic for rendering data in the project table.
+- Fix the issue where abnormal proxy settings prevent normal login.
+- The project table has added a quick opening method.

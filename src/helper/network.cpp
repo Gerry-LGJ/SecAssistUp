@@ -167,11 +167,18 @@ NetworkParams *NetworkParams::addAttribute(int code, const QVariant &val)
 
 NetworkParams *NetworkParams::setProxy(int type, const QString &hostName, quint16 port, const QString &user, const QString &password)
 {
-    if (type < NetworkProxyType::DefaultProxy || NetworkProxyType::FtpCachingProxy < type) {
+    if (type < QNetworkProxy::DefaultProxy || QNetworkProxy::FtpCachingProxy < type) {
         qWarning() << __func__ << type << "invalid";
         return this;
     }
     _proxy = QNetworkProxy((QNetworkProxy::ProxyType)type, hostName, port, user, password);
+    _enableProxy = true;
+    return this;
+}
+
+NetworkParams *NetworkParams::setProxy(const QNetworkProxy &networkProxy)
+{
+    _proxy = QNetworkProxy(networkProxy);
     _enableProxy = true;
     return this;
 }
@@ -832,7 +839,12 @@ NetworkParams *Network::deleteJsonArray(const QString &url) {
                              this);
 }
 
-void Network::setApplicationProxy(NetworkProxyType::ProxyType type, const QString &hostName, quint16 port, const QString &user, const QString &password)
+void Network::setApplicationProxy(QNetworkProxy::ProxyType type, const QString &hostName, quint16 port, const QString &user, const QString &password)
 {
-    QNetworkProxy::setApplicationProxy(QNetworkProxy((QNetworkProxy::ProxyType)type, hostName, port, user, password));
+    QNetworkProxy::setApplicationProxy(QNetworkProxy(type, hostName, port, user, password));
+}
+
+void Network::setApplicationProxy(const QNetworkProxy &networkProxy)
+{
+    QNetworkProxy::setApplicationProxy(networkProxy);
 }

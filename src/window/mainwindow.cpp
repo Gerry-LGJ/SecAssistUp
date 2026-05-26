@@ -481,7 +481,10 @@ void MainWindow::initTableWidgetProjects()
 {
     qDebug() << __func__;
     mProjectsInfo.clear();
-    mTableWidgetProjects->setColumnCount(5);
+
+    // Initialize the number of columns in the table.
+    mTableWidgetProjects->setColumnCount(6);
+
     connect(mTableWidgetProjects, &QTableWidget::itemChanged, this, [=] (QTableWidgetItem *item) {
         ProjectDbHelper *helper     = mProjectDbHelper;
         QList<project_info_t> &list = mProjectsInfo;
@@ -821,7 +824,7 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
 
     // 设置表头
     QStringList headers;
-    headers << tr("Name") << tr("Work Dir") << tr("RDS") << tr("RUS") << tr("Options");
+    headers << tr("Name") << tr("Work Dir") << tr("RDS") << tr("RUS") << tr("Options") << tr("Open Dir");
     mTableWidgetProjects->setHorizontalHeaderLabels(headers);
     twps->setRowCount(list.size());
     QHeaderView *horizontalHeader = twps->horizontalHeader();
@@ -829,6 +832,7 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
     horizontalHeader->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     horizontalHeader->setSectionResizeMode(3, QHeaderView::ResizeToContents);
     horizontalHeader->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+    horizontalHeader->setSectionResizeMode(5, QHeaderView::ResizeToContents);
 
     // 渲染数据
     for (int i = 0; i < list.size(); ++i) {
@@ -859,11 +863,30 @@ void MainWindow::updateTableWidgetDataFromProjectsInfo()
         btn->setProperty("row", i);
         connect(btn, &QPushButton::clicked, this, [=] {
             int row = btn->property("row").toInt();
-            qDebug() << "onClick TableWidgetProjects row:" << row;
+            qDebug() << "onClick TableWidgetProjects btn row:" << row;
             ProjectInfoDialog *dialog = ProjectInfoDialog::getInstance();
             dialog->openWithPid(list.at(row).pid);
         });
         twps->setCellWidget(i, 4, btn);
+
+        QPushButton *btnOpen = new QPushButton(FilIconTools::convert(FilIcons::Type::FolderOpen));
+        btnOpen->setFont(FilIconTools::font());
+        btnOpen->setProperty("row", i);
+        connect(btnOpen, &QPushButton::clicked, this, [=] {
+            int row             = btnOpen->property("row").toInt();
+            project_info_t info = mProjectsInfo.at(row);
+            QDir mdir           = QDir(info.wdir);
+
+            qDebug() << "onClick TableWidgetProjects btnOpen row:" << row <<
+                "exists:" << (info.wdir.length() > 0 && mdir.exists());
+
+            if (info.wdir.length() > 0 && mdir.exists()) {
+                QString wl = info.wdir.replace("\\", "/");
+                qDebug() << __func__ << "wl:" << wl;
+                mFilTools->showDirInExplorer(wl);
+            }
+        });
+        twps->setCellWidget(i, 5, btnOpen);
     }
 
     blocker.unblock();

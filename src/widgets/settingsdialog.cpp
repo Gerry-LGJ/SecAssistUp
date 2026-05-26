@@ -348,13 +348,14 @@ void SettingsDialog::onCurrentIndexChangedComboBoxAgentMode(int index)
     qDebug() << __func__ << " index:" << index;
     switch (index) {
     case 0:
+    case 2:
         this->ui->lineEdit_Server->setEnabled(false);
         this->ui->lineEdit_Port->setEnabled(false);
         this->ui->lineEdit_UserName->setEnabled(false);
         this->ui->lineEdit_Password->setEnabled(false);
         break;
     case 1:
-    case 2:
+    case 3:
         this->ui->lineEdit_Server->setEnabled(true);
         this->ui->lineEdit_Port->setEnabled(true);
         this->ui->lineEdit_UserName->setEnabled(true);
@@ -372,45 +373,54 @@ void SettingsDialog::onClickPushButtonAgentTest()
         qDebug() << "Agent Testing ......";
         return ;
     }
-    QString url = mSettingsHelper->getWebUrl();
-    int agentMode = 0;
+    QString url           = mSettingsHelper->getWebUrl();
+    int agentMode         = this->ui->comboBox_AgentMode->currentIndex();
     QString agentServer   = this->ui->lineEdit_Server->text();
     uint16_t agentPort    = this->ui->lineEdit_Port->text().toUInt();
     QString agentUserName = this->ui->lineEdit_UserName->text();
     QString agentPassword = this->ui->lineEdit_Password->text();
-    switch (this->ui->comboBox_AgentMode->currentIndex()) {
-    case 0: agentMode = QNetworkProxy::ProxyType::NoProxy;     break;
-    case 1: agentMode = QNetworkProxy::ProxyType::HttpProxy;   break;
-    case 2: agentMode = QNetworkProxy::ProxyType::Socks5Proxy; break;
-    }
-    qDebug() << "TestProxyUrl:" << url;
+
     QString msglog = QString("type:%1 server:%2 port:%3 username:%4 password:%5")
                          .arg(agentMode)
                          .arg(agentServer)
                          .arg(agentPort)
                          .arg(agentUserName, agentPassword);
-    qDebug() << __func__ << " " << msglog;
-    mNetwork->get(url)
-    ->setProxy(agentMode, agentServer, agentPort, agentUserName, agentPassword)
-    ->addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0")
+
+    qDebug() << __func__ << "TestProxyUrl:" << url << msglog;
+
+    // Start Network Request
+    NetworkParams *params = mNetwork->get(url);
+
+    switch (agentMode) {
+    case QNetworkProxy::DefaultProxy:
+        params = params->setProxy(QNetworkProxy());
+        break;
+    case QNetworkProxy::Socks5Proxy:
+        params = params->setProxy(QNetworkProxy::Socks5Proxy, agentServer, agentPort, agentUserName, agentPassword);
+        break;
+    case QNetworkProxy::NoProxy:
+        params = params->setProxy(QNetworkProxy::NoProxy);
+        break;
+    case QNetworkProxy::HttpProxy:
+        params = params->setProxy(QNetworkProxy::HttpProxy, agentServer, agentPort, agentUserName, agentPassword);
+    default:
+        break;
+    }
+
+    params = params->addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0");
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-    ->addAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy)
+    params = params->addAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
 #endif
-    ->bind(this)
-    ->go(mAgentTestCallable);
+    params = params->bind(this);
+    params->go(mAgentTestCallable);
 }
 
 void SettingsDialog::onClickPushButtonAgentConfirm()
 {
-    qDebug() << __func__;
-    uint8_t proxyType = 0;
-    switch (this->ui->comboBox_AgentMode->currentIndex()) {
-    case 0: proxyType = QNetworkProxy::ProxyType::NoProxy;     break;
-    case 1: proxyType = QNetworkProxy::ProxyType::HttpProxy;   break;
-    case 2: proxyType = QNetworkProxy::ProxyType::Socks5Proxy; break;
-    default:
-            proxyType = 0;                                     break;
-    }
+    // The index value must be determined strictly according to the value of the QNetworkProxy::ProxyType type.
+    uint8_t proxyType = this->ui->comboBox_AgentMode->currentIndex();
+    qDebug() << __func__ << "proxyType:" << proxyType;
+
     mSettingsHelper->saveAppAgentMode(proxyType);
     mSettingsHelper->saveAppAgentServer(this->ui->lineEdit_Server->text());
     mSettingsHelper->saveAppAgentPort(this->ui->lineEdit_Port->text().toUInt());
@@ -462,20 +472,14 @@ void SettingsDialog::reloadConfigurationsFromSettings()
     // LineEdit
     this->ui->lineEdit_DownloadLocation->setText(mSettingsHelper->getAppDownloadDir());
     // Agent
-    uint8_t agentModeIndex  = 0;
     uint8_t agentMode     = mSettingsHelper->getAppAgentMode();
     QString agentServer   = mSettingsHelper->getAppAgentServer();
     uint16_t agentPort    = mSettingsHelper->getAppAgentPort();
     QString agentUserName = mSettingsHelper->getAppAgentUsername();
     QString agentPassword = mSettingsHelper->getAppAgentPassword();
-    switch (agentMode) {
-    case QNetworkProxy::ProxyType::HttpProxy:   agentModeIndex = 1; break;
-    case QNetworkProxy::ProxyType::Socks5Proxy: agentModeIndex = 2; break;
-    case QNetworkProxy::ProxyType::NoProxy:     agentModeIndex = 0; break;
-    default: agentModeIndex = 0;
-    }
-    this->ui->comboBox_AgentMode->setCurrentIndex(agentModeIndex);
-    onCurrentIndexChangedComboBoxAgentMode(agentModeIndex);
+
+    this->ui->comboBox_AgentMode->setCurrentIndex(agentMode);
+    onCurrentIndexChangedComboBoxAgentMode(agentMode);
     this->ui->lineEdit_Server->setText(agentServer);
     this->ui->lineEdit_Port->setText(QString::number(agentPort));
     this->ui->lineEdit_UserName->setText(agentUserName);
@@ -569,9 +573,28 @@ void SettingsDialog::reloadAgentConfigurations()
     uint16_t agentPort    = mSettingsHelper->getAppAgentPort();
     QString agentUserName = mSettingsHelper->getAppAgentUsername();
     QString agentPassword = mSettingsHelper->getAppAgentPassword();
-    if (agentMode != QNetworkProxy::ProxyType::NoProxy) {
-        mNetwork->setApplicationProxy((NetworkProxyType::ProxyType)agentMode, agentServer, agentPort, agentUserName, agentPassword);
-    } else if (agentMode == QNetworkProxy::ProxyType::NoProxy) {
-        mNetwork->setApplicationProxy(NetworkProxyType::NoProxy);
+
+    qDebug() << __func__ << "agentMode:"  << agentMode                     <<
+        "agentServer:"   << agentServer   << "agentPort:"     << agentPort <<
+        "agentUserName:" << agentUserName << "agentPassword:" << agentPassword;
+
+    switch (agentMode) {
+        case QNetworkProxy::DefaultProxy:
+            mNetwork->setApplicationProxy(QNetworkProxy());
+            break;
+        case QNetworkProxy::Socks5Proxy:
+            mNetwork->setApplicationProxy(QNetworkProxy::Socks5Proxy, agentServer, agentPort, agentUserName, agentPassword);
+            break;
+        case QNetworkProxy::NoProxy:
+            mNetwork->setApplicationProxy(QNetworkProxy::NoProxy);
+            break;
+        case QNetworkProxy::HttpProxy:
+            mNetwork->setApplicationProxy(QNetworkProxy::HttpProxy, agentServer, agentPort, agentUserName, agentPassword);
+            break;
+        case QNetworkProxy::HttpCachingProxy:
+        case QNetworkProxy::FtpCachingProxy:
+        default:
+            qDebug() << __func__ << "Unsupported proxy mode." << agentMode;
+            break;
     }
 }

@@ -536,17 +536,22 @@
               </property>
               <item>
                <property name="text">
-                <string>Not Agent</string>
+                <string>Default Proxy</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>HTTP Proxy</string>
+                <string>Socks5 Proxy</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>SOCKS5 Proxy</string>
+                <string>No Proxy</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Http Proxy</string>
                </property>
               </item>
              </widget>
