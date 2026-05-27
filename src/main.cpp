@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
     SettingsHelper::getInstance()->init(argv);
     TranslateHelper::getInstance()->init();
 
-    // When launching the application in the update mode, we need to wait for a moment
-    // to ensure that the previous application has enough time to completely exit.
-    if (arguments.size() >= 2 && arguments.at(1).startsWith("-update")) {
+    // When restarting the application, we need to wait for a moment to ensure that the previous
+    // application has sufficient time to completely exit.
+    {
         QEventLoop loop;
         QTimer::singleShot(200, &loop, &QEventLoop::quit);
         loop.exec();

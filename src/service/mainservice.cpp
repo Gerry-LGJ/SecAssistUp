@@ -58,6 +58,7 @@ void MainService::init()
 
     initSystemTrayIcon();
     SettingsDialog::initRunAtSystemStartup();
+    SettingsDialog::reloadAgentConfigurations();
     currentActiveWindowType = ACTIVE_WINDOW_TYPE_LOGIN;
 
     SettingsHelper *settings = SettingsHelper::getInstance();

@@ -68,57 +68,57 @@
 <context>
     <name>MainService</name>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="65"/>
-        <location filename="../../src/service/mainservice.cpp" line="142"/>
-        <location filename="../../src/service/mainservice.cpp" line="177"/>
-        <location filename="../../src/service/mainservice.cpp" line="256"/>
+        <location filename="../../src/service/mainservice.cpp" line="66"/>
+        <location filename="../../src/service/mainservice.cpp" line="143"/>
+        <location filename="../../src/service/mainservice.cpp" line="178"/>
+        <location filename="../../src/service/mainservice.cpp" line="257"/>
         <source>Friendly Reminder</source>
         <translation>友情提示</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="66"/>
-        <location filename="../../src/service/mainservice.cpp" line="143"/>
+        <location filename="../../src/service/mainservice.cpp" line="67"/>
+        <location filename="../../src/service/mainservice.cpp" line="144"/>
         <source>SecAssistUp is hidden from the tray, click on the tray to activate the window again.</source>
         <translation>SecAssistUp 在托盘中处于隐藏状态，单击托盘图标以再次激活窗口。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="94"/>
+        <location filename="../../src/service/mainservice.cpp" line="95"/>
         <source>Remember my choice.</source>
         <translation>记住我的选择。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="97"/>
-        <location filename="../../src/service/mainservice.cpp" line="106"/>
+        <location filename="../../src/service/mainservice.cpp" line="98"/>
+        <location filename="../../src/service/mainservice.cpp" line="107"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="98"/>
+        <location filename="../../src/service/mainservice.cpp" line="99"/>
         <source>Are you sure you want to exit the program ?</source>
         <translation>你确定要退出程序吗？</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="104"/>
+        <location filename="../../src/service/mainservice.cpp" line="105"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="105"/>
+        <location filename="../../src/service/mainservice.cpp" line="106"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="178"/>
+        <location filename="../../src/service/mainservice.cpp" line="179"/>
         <source>Please do not launch again. The application is already running and can be restored from the system tray.</source>
         <translation>请勿再次启动程序。该程序已经正在运行，您可以在系统托盘处再次恢复窗口。</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="182"/>
+        <location filename="../../src/service/mainservice.cpp" line="183"/>
         <source>Critical</source>
         <translation>严重错误</translation>
     </message>
     <message>
-        <location filename="../../src/service/mainservice.cpp" line="256"/>
+        <location filename="../../src/service/mainservice.cpp" line="257"/>
         <source>Please log in first before viewing.</source>
         <translation>请先登录后查看。</translation>
     </message>

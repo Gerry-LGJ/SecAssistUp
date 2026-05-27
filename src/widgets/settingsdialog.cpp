@@ -568,33 +568,35 @@ void SettingsDialog::reloadConfigurationsFromSettings()
 
 void SettingsDialog::reloadAgentConfigurations()
 {
-    uint8_t agentMode     = mSettingsHelper->getAppAgentMode();
-    QString agentServer   = mSettingsHelper->getAppAgentServer();
-    uint16_t agentPort    = mSettingsHelper->getAppAgentPort();
-    QString agentUserName = mSettingsHelper->getAppAgentUsername();
-    QString agentPassword = mSettingsHelper->getAppAgentPassword();
+    SettingsHelper *mSettings    = SettingsHelper::getInstance();
+    Network        *mNetwork     = Network::getInstance();
+    uint8_t         mode         = mSettings->getAppAgentMode();
+    QString         server       = mSettings->getAppAgentServer();
+    uint16_t        port         = mSettings->getAppAgentPort();
+    QString         userName     = mSettings->getAppAgentUsername();
+    QString         password     = mSettings->getAppAgentPassword();
 
-    qDebug() << __func__ << "agentMode:"  << agentMode                     <<
-        "agentServer:"   << agentServer   << "agentPort:"     << agentPort <<
-        "agentUserName:" << agentUserName << "agentPassword:" << agentPassword;
+    qDebug() << __func__              << "agentMode:"     << mode  <<
+        "agentServer:"   << server    << "agentPort:"     << port  <<
+        "agentUserName:" << userName  << "agentPassword:" << password;
 
-    switch (agentMode) {
+    switch (mode) {
         case QNetworkProxy::DefaultProxy:
             mNetwork->setApplicationProxy(QNetworkProxy());
             break;
         case QNetworkProxy::Socks5Proxy:
-            mNetwork->setApplicationProxy(QNetworkProxy::Socks5Proxy, agentServer, agentPort, agentUserName, agentPassword);
+            mNetwork->setApplicationProxy(QNetworkProxy::Socks5Proxy, server, port, userName, password);
             break;
         case QNetworkProxy::NoProxy:
             mNetwork->setApplicationProxy(QNetworkProxy::NoProxy);
             break;
         case QNetworkProxy::HttpProxy:
-            mNetwork->setApplicationProxy(QNetworkProxy::HttpProxy, agentServer, agentPort, agentUserName, agentPassword);
+            mNetwork->setApplicationProxy(QNetworkProxy::HttpProxy  , server, port, userName, password);
             break;
         case QNetworkProxy::HttpCachingProxy:
         case QNetworkProxy::FtpCachingProxy:
         default:
-            qDebug() << __func__ << "Unsupported proxy mode." << agentMode;
+            qDebug() << __func__ << "Unsupported proxy mode." << mode;
             break;
     }
 }

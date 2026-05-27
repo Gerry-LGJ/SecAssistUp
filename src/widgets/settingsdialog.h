@@ -26,6 +26,7 @@ public:
 
 public:
     static void initRunAtSystemStartup(void);
+    static void reloadAgentConfigurations();
 
 // protected:
 //     void closeEvent(QCloseEvent *event) override ;
@@ -75,7 +76,6 @@ private:
 
     void init();
     void reloadConfigurationsFromSettings();
-    void reloadAgentConfigurations();
 };
 
 #endif // SETTINGSDIALOG_H
