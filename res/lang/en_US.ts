@@ -60,6 +60,11 @@
         <source>Sign in</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../src/window/loginwindow.cpp" line="189"/>
+        <source>Network abnormality. Please log in again.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainService</name>
@@ -281,7 +286,7 @@
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="516"/>
         <location filename="../../build/Desktop_Qt_5_15_2_MinGW_64_bit-Release/SecAssistUp_autogen/include/ui_mainwindow.h" line="518"/>
         <location filename="../../src/window/mainwindow.cpp" line="452"/>
-        <location filename="../../src/window/mainwindow.cpp" line="630"/>
+        <location filename="../../src/window/mainwindow.cpp" line="638"/>
         <source>Upload</source>
         <translation type="unfinished"></translation>
     </message>
@@ -304,7 +309,7 @@
     </message>
     <message>
         <location filename="../../src/window/mainwindow.cpp" line="178"/>
-        <location filename="../../src/window/mainwindow.cpp" line="745"/>
+        <location filename="../../src/window/mainwindow.cpp" line="753"/>
         <source>Open Files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -314,12 +319,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="585"/>
+        <location filename="../../src/window/mainwindow.cpp" line="593"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="622"/>
+        <location filename="../../src/window/mainwindow.cpp" line="630"/>
         <source>Downlaod</source>
         <translation type="unfinished"></translation>
     </message>
@@ -327,19 +332,19 @@
         <location filename="../../src/window/mainwindow.cpp" line="151"/>
         <location filename="../../src/window/mainwindow.cpp" line="212"/>
         <location filename="../../src/window/mainwindow.cpp" line="407"/>
-        <location filename="../../src/window/mainwindow.cpp" line="717"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1143"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1145"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1152"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1175"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1177"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1184"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1211"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1213"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1220"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1247"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1249"/>
-        <location filename="../../src/window/mainwindow.cpp" line="1256"/>
+        <location filename="../../src/window/mainwindow.cpp" line="725"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1151"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1153"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1160"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1183"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1185"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1192"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1219"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1221"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1228"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1255"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1257"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1264"/>
         <source>Reminder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -392,57 +397,57 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="717"/>
+        <location filename="../../src/window/mainwindow.cpp" line="725"/>
         <source>Download Directory Not Exists.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>Work Dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>RDS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>RUS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="827"/>
+        <location filename="../../src/window/mainwindow.cpp" line="835"/>
         <source>Open Dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="984"/>
+        <location filename="../../src/window/mainwindow.cpp" line="992"/>
         <source>Selected: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="1145"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1153"/>
         <source>Refresh Failure.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="1150"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1158"/>
         <source>Network abnormality. Please log in again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/window/mainwindow.cpp" line="1198"/>
+        <location filename="../../src/window/mainwindow.cpp" line="1206"/>
         <source>%1 file(s) uploaded</source>
         <translation type="unfinished"></translation>
     </message>

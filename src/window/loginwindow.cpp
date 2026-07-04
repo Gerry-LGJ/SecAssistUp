@@ -185,8 +185,8 @@ bool LoginWindow::mSEventHandler(MSEvent *e)
             }
 
         } else if (resultCode == MSEvent::RESULT_CODE_NETWORK_ONERROR) {
-            QString msg = QString("%1;%2;%3")
-                .arg(map["status"].toString(), map["errorString"].toString(), map["result"].toString());
+            QString msg = QString("%1;%2;%3\n%4")
+                .arg(map["status"].toString(), map["errorString"].toString(), map["result"].toString(), tr("Network abnormality. Please log in again."));
             qDebug() << "msg:" << msg;
             QMessageBox::critical(this, "Reminder", msg);
 

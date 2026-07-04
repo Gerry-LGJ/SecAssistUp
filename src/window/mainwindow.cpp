@@ -519,6 +519,14 @@ void MainWindow::initTableWidgetProjects()
                     }
                     // 此处因为是在槽函数当中，更新UI会导致item被清空，所以直接修改mProjectsInfo中缓存的值
                     list[row] = info;
+                    // 同步更新Active Project Info中的缓存值
+                    if (mActiveProjectInfo.pid == info.pid) {
+                        if (column == 2) {
+                            mActiveProjectInfo.rds = info.rds;
+                        } else if (column == 3) {
+                            mActiveProjectInfo.rus = info.rus;
+                        }
+                    }
                 }
             }
         }

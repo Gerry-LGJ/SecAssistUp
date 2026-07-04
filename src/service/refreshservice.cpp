@@ -224,7 +224,7 @@ void RefreshService::recoverSelects()
                 if (from.isFile == to.isFile &&
                     from.name   == to.name   &&
                     from.path   == to.path) {
-                    lwwfs->setCurrentRow(j);
+                    lwwfs->setCurrentRow(j, QItemSelectionModel::Select);
                     names << to.name;
                 }
 
